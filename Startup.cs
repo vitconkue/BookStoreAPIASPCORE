@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using BookStore.Data; 
 using Microsoft.EntityFrameworkCore;
-
+using BookStore.Repository;
 
 namespace BookStore
 {
@@ -30,6 +30,7 @@ namespace BookStore
         {
             services.AddControllers();
             services.AddDbContext<AppDbContext>(p=> p.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<IBookRepository,BookRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
