@@ -62,5 +62,29 @@ namespace BookStore.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("delete/{id}")]
+        public IActionResult DeleteBook(int id)
+        {
+            var result = _repository.DeleteById(id); 
+
+            if(result == null)
+            {
+                return NotFound(new NoBookFoundError());
+            }
+            return Ok();
+        }
+        [HttpPost]
+        [Route("update")]
+        public IActionResult UpdateBook([FromBody] UpdateBookActionModel model)
+        {   
+            Book result = _repository.UpdateBook(model); 
+            if(result == null)
+            {
+                return BadRequest();
+            }
+            return Ok(result);
+        }
     }
 }

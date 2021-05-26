@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using BookStore.ActionModels;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BookStore.Repository
 {
@@ -40,6 +41,42 @@ namespace BookStore.Repository
         {
             Book result = _context.Books.Include(book => book.Type).FirstOrDefault(book => book.Id == id);
             return result; 
+        }
+
+        public EntityEntry DeleteById(int id)
+        {
+            Book found = _context.Books.Include(book => book.Type).FirstOrDefault(book => book.Id == id);
+            if(found == null)
+            {
+                return null;
+            }
+            var result =_context.Books.Remove(found); 
+            _context.SaveChanges();
+            return result;
+        }
+
+        public Book UpdateBook(UpdateBookActionModel changed)
+        {
+            Book found = _context.Books.FirstOrDefault(book => book.Id == changed.Id); 
+            if(found == null)
+            {
+                return null;
+            }
+
+            BookType type = _context.BookTypes.FirstOrDefault(type => type.Id == changed.TypeID);
+            if(type == null)
+            {
+                return null; 
+            }
+
+            found.Title = changed.Title;
+            found.Author = changed.Author;
+            found.CurrentAmount = changed.Amount; 
+            found.Type = type; 
+
+            _context.SaveChanges();
+
+            return found;
         }
     }
 }
