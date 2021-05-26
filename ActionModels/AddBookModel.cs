@@ -5,12 +5,12 @@ namespace BookStore.ActionModels
     public class AddBookModel
     {
         [Required]
-        public string Title; 
+        public string Title {get;set;}
 
-        public string Author;
+        public string Author {get;set;}
 
-        public int TypeID;
+        public int TypeID {get;set;}
 
-        public int Amount; 
+        public int Amount {get;set;}
     }
 }

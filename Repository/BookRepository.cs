@@ -16,14 +16,18 @@ namespace BookStore.Repository
             _context = context;
         }
 
-        public Book AddBookRepository(AddBookModel newBook)
+        public Book AddBook(AddBookModel newBook)
         {
             Book toAdd = new Book {
                 Title = newBook.Title,
                 Author = newBook.Author,
                 CurrentAmount = newBook.Amount
             };
-
+            BookType type = _context.BookTypes.FirstOrDefault(type => type.Id == newBook.TypeID);
+          
+            toAdd.Type = type; 
+            _context.Add(toAdd);
+            _context.SaveChanges();  
             return toAdd;
         }
 

@@ -9,6 +9,6 @@ namespace BookStore.Repository
         List<Book> GetAllBooks(); 
         Book GetById(int id); 
 
-        Book AddBookRepository(AddBookModel newBook);  
+        Book AddBook(AddBookModel newBook);  
     }
 }

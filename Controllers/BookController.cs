@@ -4,11 +4,16 @@ using BookStore.Repository;
 using Microsoft.Extensions.Logging;
 using BookStore.Errors;
 using BookStore.ActionModels; 
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+
+
 
 namespace BookStore.Controllers
 {
-    [ApiController]
+    
     [Route("api/[controller]")]
+    [ApiController]
     public class BookController: ControllerBase
     {
         private readonly ILogger<BookController> _logger;
@@ -47,12 +52,15 @@ namespace BookStore.Controllers
         }
 
         [HttpPost] 
-        public IActionResult AddBook([FromBody] AddBookModel model)
+        public IActionResult AddBook([FromBody]AddBookModel model)
         {
-            
+            if (!ModelState.IsValid)
+            {   
+                return BadRequest(ModelState);
+            }
+            Book result =  _repository.AddBook(model); 
 
-
-            return Ok();
+            return Ok(result);
         }
     }
 }
