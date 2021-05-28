@@ -53,6 +53,12 @@ Result: result of the deleting method, 404 if not found
 
 ```
 
+Get all book types
+```
+api/book/types
+METHOD: GET
+```
+
 ----------------------------------------------------------------------------------------------------------
 Configurations: 4 types
 ```
