@@ -29,8 +29,9 @@ namespace BookStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<AppDbContext>(p=> p.UseNpgsql(Configuration.GetConnectionString("HerokuConnection")));
+            services.AddDbContext<AppDbContext>(p=> p.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IBookRepository,BookRepository>();
+            services.AddTransient<IConfigurationRepository,ConfigurationsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
