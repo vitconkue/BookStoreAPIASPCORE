@@ -54,7 +54,11 @@ Result: result of the deleting method, 404 if not found
 ```
 
 ----------------------------------------------------------------------------------------------------------
-Configurations: 
+Configurations: 4 types
+MaximumAmountBookLeftBeforeImport: chi nhap cac loai sach co luong ton it hon xxx
+MinimumImportBook: So luong nhap toi da mot luc
+MaximumDebtCustomer: Neu no hon xxx thi khong lap hoa don cho khach
+MaximumAmountBookLeftAfterSelling: Sau khi ban xong phai con lai it nhat xxx
 
 
 
