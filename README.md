@@ -53,3 +53,30 @@ Result: result of the deleting method, 404 if not found
 
 ```
 
+----------------------------------------------------------------------------------------------------------
+Configurations: 
+
+
+
+Get All Configurations
+```
+api/configurations/
+METHOD: GET
+Result: All configurations | not found
+```
+
+Get 1 Configuration
+```
+api/configurations/{name}
+METHOD: GET
+Result: 1 configuration | not found
+```
+
+Toogle Configuration
+```
+api/configurations/toggle/{name}
+METHOD: POST
+Result: if success: new configuration object | if failed: not found
+
+```
+
