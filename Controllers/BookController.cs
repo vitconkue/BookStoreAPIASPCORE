@@ -38,6 +38,12 @@ namespace BookStore.Controllers
             }
             else return Ok(result); 
         }
+        [HttpGet]
+        [Route("types")]
+        public IActionResult GetAllTypes()
+        {
+            return Ok(_repository.GetAllType()); 
+        }
 
         [HttpGet]
         [Route("{id}")]

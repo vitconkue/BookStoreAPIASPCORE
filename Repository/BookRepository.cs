@@ -17,6 +17,11 @@ namespace BookStore.Repository
             _context = context;
         }
 
+        public List<BookType> GetAllType()
+        {
+            return _context.BookTypes.ToList(); 
+        }
+
         public Book AddBook(AddBookModel newBook)
         {
             Book toAdd = new Book {
@@ -35,6 +40,11 @@ namespace BookStore.Repository
         public List<Book> GetAllBooks()
         {
             return _context.Books.Include(book => book.Type).ToList();
+        }
+
+        public List<Book> SearchBooks(string searchString)
+        {
+            return _context.Books.Where(book => book.Title.Contains(searchString)).ToList(); 
         }
 
         public Book GetById(int id)
@@ -57,6 +67,7 @@ namespace BookStore.Repository
 
         public Book UpdateBook(UpdateBookActionModel changed)
         {
+          
             Book found = _context.Books.FirstOrDefault(book => book.Id == changed.Id); 
             if(found == null)
             {
