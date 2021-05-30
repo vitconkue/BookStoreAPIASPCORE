@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using BookStore.Data; 
+using BookStore.Data;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Repository;
 
@@ -29,9 +29,9 @@ namespace BookStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<AppDbContext>(p=> p.UseNpgsql(Configuration.GetConnectionString("HerokuConnection")));
-            services.AddTransient<IBookRepository,BookRepository>();
-            services.AddTransient<IConfigurationRepository,ConfigurationsRepository>();
+            services.AddDbContext<AppDbContext>(p => p.UseNpgsql(Configuration.GetConnectionString("HerokuConnection")));
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IConfigurationRepository, ConfigurationsRepository>();
             services.AddCors();
         }
 
@@ -47,11 +47,6 @@ namespace BookStore
 
             app.UseRouting();
 
-            app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials());
 
             app.UseAuthorization();
 
