@@ -50,7 +50,8 @@ namespace BookStore
             app.UseCors(x => x
                .AllowAnyOrigin()
                .AllowAnyMethod()
-               .AllowAnyHeader());
+               .AllowAnyHeader()
+               .AllowCredentials());
 
             app.UseAuthorization();
 
