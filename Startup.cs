@@ -51,7 +51,7 @@ namespace BookStore
                .AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader()
-               .AllowCredentials());
+              );
 
             app.UseAuthorization();
 
