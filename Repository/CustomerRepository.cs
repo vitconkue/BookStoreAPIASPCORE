@@ -37,8 +37,10 @@ namespace BookStore.Repository
 
         public Customer GetSingleCustomer(int id)
         {
-            var resultCustomer = _context.Customers.FirstOrDefault(customer => customer.Id == id); 
-            return resultCustomer;
+            var found = _context.Customers.FirstOrDefault(customer => customer.Id == id); 
+            if(found == null)
+                return null;
+            return found;
         }
     }
 
