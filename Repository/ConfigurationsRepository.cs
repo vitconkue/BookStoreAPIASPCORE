@@ -15,7 +15,7 @@ namespace BookStore.Repository
         }
         public List<Configuration> GetAllConfigurations()
         {
-            return _context.Configurations.ToList();
+            return _context.Configurations.OrderBy(con => con.Name).ToList();
 
         }
 
