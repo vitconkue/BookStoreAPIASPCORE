@@ -18,6 +18,8 @@ namespace BookStore.Repository
         EntityEntry DeleteBill(int id);
 
         List<BillDetail> GetSingleBillDetail(int id);
+
+        List<BillDetail> AddBookToBill(AddBookToBill model);
     }
 
 }

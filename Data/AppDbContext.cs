@@ -23,5 +23,7 @@ namespace BookStore.Data
         
         public DbSet<BillDetail> BillsDetails {get;set;}
 
+        public DbSet<Receipt> Receipts {get;set;}
+
     }
 }

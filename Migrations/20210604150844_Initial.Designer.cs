@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210604091449_AddBillDetailListToBillFinal")]
-    partial class AddBillDetailListToBillFinal
+    [Migration("20210604150844_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -104,6 +104,9 @@ namespace BookStore.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<int>("AmountAfterChanged")
+                        .HasColumnType("integer");
+
                     b.Property<int>("AmountChanged")
                         .HasColumnType("integer");
 
@@ -183,6 +186,29 @@ namespace BookStore.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("BookStore.Models.Receipt", b =>
+                {
+                    b.Property<int>("ReceiptID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("MoneyAmount")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ReceiptID");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Receipts");
+                });
+
             modelBuilder.Entity("BookStore.Models.Bill", b =>
                 {
                     b.HasOne("BookStore.Models.Customer", "Customer")
@@ -221,6 +247,15 @@ namespace BookStore.Migrations
                         .HasForeignKey("BookId");
 
                     b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Receipt", b =>
+                {
+                    b.HasOne("BookStore.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("BookStore.Models.Bill", b =>

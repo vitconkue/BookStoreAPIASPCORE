@@ -76,5 +76,26 @@ namespace BookStore.Controllers
             return Ok(result);
 
         }
+
+        [HttpPost]
+        [Route("detail/{id}")]
+        public IActionResult AddBookEntryToBillDetail([FromBody] AddBookToBill model)
+        {
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("detail/update/")]
+        public IActionResult UpdateBillDetailEntry()
+        {
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("detail/delete/{billDetailID}")]
+        public IActionResult DeleteBillDetailEntry(int billDetailID)
+        {
+            return Ok();
+        }
     }
 }

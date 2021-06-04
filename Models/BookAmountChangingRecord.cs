@@ -18,6 +18,8 @@ namespace BookStore.Models
         [Required]
         public int AmountChanged {get;set;}
 
+        public int AmountAfterChanged {get;set;}
+
         public DateTime DateChanged{get;set;} = DateTime.Now;
             
     }

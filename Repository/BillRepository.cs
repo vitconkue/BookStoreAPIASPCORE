@@ -17,6 +17,12 @@ namespace BookStore.Repository
         {
             _context = context;
         }
+
+        public List<BillDetail> AddBookToBill(AddBookToBill model)
+        {
+            throw new NotImplementedException();
+        }
+
         public Bill CreateBill(AddBillModel model)
         {
             var foundCustomer = _context.Customers.FirstOrDefault(Customer=> Customer.Id == model.CustomerID);
