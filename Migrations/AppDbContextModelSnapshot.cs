@@ -19,6 +19,54 @@ namespace BookStore.Migrations
                 .HasAnnotation("ProductVersion", "5.0.6")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+            modelBuilder.Entity("BookStore.Models.Bill", b =>
+                {
+                    b.Property<int>("BillId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("BillId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Bills");
+                });
+
+            modelBuilder.Entity("BookStore.Models.BillDetail", b =>
+                {
+                    b.Property<int>("BillDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("BillId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("integer");
+
+                    b.HasKey("BillDetailId");
+
+                    b.HasIndex("BillId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("BillsDetails");
+                });
+
             modelBuilder.Entity("BookStore.Models.Book", b =>
                 {
                     b.Property<int>("Id")
@@ -118,6 +166,9 @@ namespace BookStore.Migrations
                     b.Property<int>("CurrentDebt")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -128,6 +179,28 @@ namespace BookStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Bill", b =>
+                {
+                    b.HasOne("BookStore.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("BookStore.Models.BillDetail", b =>
+                {
+                    b.HasOne("BookStore.Models.Bill", null)
+                        .WithMany("Details")
+                        .HasForeignKey("BillId");
+
+                    b.HasOne("BookStore.Models.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId");
+
+                    b.Navigation("Book");
                 });
 
             modelBuilder.Entity("BookStore.Models.Book", b =>
@@ -146,6 +219,11 @@ namespace BookStore.Migrations
                         .HasForeignKey("BookId");
 
                     b.Navigation("Book");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Bill", b =>
+                {
+                    b.Navigation("Details");
                 });
 #pragma warning restore 612, 618
         }

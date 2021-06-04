@@ -32,7 +32,8 @@ namespace BookStore
             services.AddDbContext<AppDbContext>(p => p.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IConfigurationRepository, ConfigurationsRepository>();
-            services.AddTransient<ICustomerRepository,CustomerRepository>();
+            services.AddTransient<ICustomerRepository,CustomerRepository>();    
+            services.AddScoped<IBillRepository,BillRepository>();
             services.AddCors();
         }
 

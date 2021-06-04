@@ -19,5 +19,9 @@ namespace BookStore.Data
         
         public DbSet<Customer> Customers { get; set; }
 
+        public DbSet<Bill> Bills {get;set;}
+        
+        public DbSet<BillDetail> BillsDetails {get;set;}
+
     }
 }
