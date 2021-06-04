@@ -24,7 +24,16 @@ namespace BookStore.Repository
 
         public EntityEntry DeleteBill(int id)
         {
-            throw new System.NotImplementedException();
+            Bill found = _context.Bills.Include(bill => bill.Customer).FirstOrDefault(bill => bill.BillId == id);
+            if(found == null)
+            {    
+                return null;
+            }
+            var result = _context.Remove(found); 
+
+            _context.SaveChanges(); 
+
+            return result;
         }
 
         public List<Bill> GetAllBills()

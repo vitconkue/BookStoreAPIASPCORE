@@ -44,6 +44,15 @@ namespace BookStore.Controllers
             return Ok(result);
         }
 
+        [Route("delelte/{id}")]
+        public IActionResult DeleteBill(int id)
+        {
+            var result = _repository.DeleteBill(id);
+            if(result == null)
+                return NotFound();
+            return Ok();
+        }
+
         [Route("detail/{id}")]
         public IActionResult GetBillDetail(int id)
         {
