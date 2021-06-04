@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
 namespace BookStore.Models
 {
     public class BookAmountChangingRecord
@@ -16,6 +17,8 @@ namespace BookStore.Models
 
         [Required]
         public int AmountChanged {get;set;}
+
+        public DateTime DateChanged{get;set;} = DateTime.Now;
         
     }
 }
