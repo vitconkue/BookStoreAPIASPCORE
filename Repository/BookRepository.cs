@@ -101,10 +101,10 @@ namespace BookStore.Repository
 
                 }
                 _context.Add(record);
-                _context.SaveChanges();
 
 
             }
+            _context.SaveChanges();
 
             return found;
         }
