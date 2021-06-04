@@ -11,7 +11,7 @@ namespace BookStore.Repository
 
         Bill GetSingleBill(int id);
 
-        Bill CreateBill(); 
+        Bill CreateBill(AddBillModel model); 
 
         Bill UpdateBill();
         

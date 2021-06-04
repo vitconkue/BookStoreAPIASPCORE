@@ -6,6 +6,7 @@ using BookStore.Errors;
 using BookStore.ActionModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using BookStore.DTO;
 
 namespace BookStore.Controllers
 {
@@ -35,23 +36,33 @@ namespace BookStore.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        public IActionResult AddNewBill([FromBody] AddBillModel model)
+        {
+            var result = _repository.CreateBill(model);
+            return Ok(result);
+        }
+
         [Route("{id}")]
         public IActionResult GetSingleBill(int id)
         {
             var result = _repository.GetSingleBill(id);
             if(result == null)
                 return NotFound();
-            return Ok(result);
+            return Ok( BillDTO.GetDTO(result)); 
         }
 
-        [Route("delelte/{id}")]
+        [HttpPost]
+        [Route("delete/{id}")]
         public IActionResult DeleteBill(int id)
         {
             var result = _repository.DeleteBill(id);
             if(result == null)
                 return NotFound();
-            return Ok();
+            return Ok(new {Delete = $"Deleted bill {id}"});
         }
+
+        // detail endpoints
 
         [Route("detail/{id}")]
         public IActionResult GetBillDetail(int id)

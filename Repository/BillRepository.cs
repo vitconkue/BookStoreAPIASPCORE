@@ -17,9 +17,17 @@ namespace BookStore.Repository
         {
             _context = context;
         }
-        public Bill CreateBill()
+        public Bill CreateBill(AddBillModel model)
         {
-            throw new System.NotImplementedException();
+            var foundCustomer = _context.Customers.FirstOrDefault(Customer=> Customer.Id == model.CustomerID);
+            Bill newBill = new Bill {
+                DateTime = DateTime.Now
+            };
+            newBill.Customer = foundCustomer; 
+
+            _context.Add(newBill);
+            _context.SaveChanges();
+            return newBill;
         }
 
         public EntityEntry DeleteBill(int id)
