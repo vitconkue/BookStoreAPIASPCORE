@@ -83,6 +83,7 @@ namespace BookStore.Controllers
         }
         [HttpPost]
         [Route("update")]
+       
         public IActionResult UpdateBook([FromBody] UpdateBookActionModel model)
         {
 

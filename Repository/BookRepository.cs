@@ -73,18 +73,37 @@ namespace BookStore.Repository
             {
                 return null;
             }
-
+            int currentAmountBeforeChange = found.CurrentAmount; 
+            
             BookType type = _context.BookTypes.FirstOrDefault(type => type.Id == changed.TypeID);
             if (type == null)
             {
                 return null;
             }
-
+            int temp  = found.Id;
             found.Title = changed.Title;
             found.Author = changed.Author;
-            found.CurrentAmount = changed.Amount;
             found.Type = type;
+            found.CurrentAmount = changed.Amount;
 
+            // change in book amount
+            if(changed.Amount != currentAmountBeforeChange)
+            {
+                BookAmountChangingRecord record = new BookAmountChangingRecord();
+                record.Book = found;
+                record.IsImport = changed.Amount > currentAmountBeforeChange;
+                if(changed.Amount > currentAmountBeforeChange)
+                {
+                    record.AmountChanged = changed.Amount - currentAmountBeforeChange;
+                }
+                else{
+                    record.AmountChanged = currentAmountBeforeChange - changed.Amount ;
+
+                }
+                _context.Add(record);
+
+
+            }
             _context.SaveChanges();
 
             return found;
