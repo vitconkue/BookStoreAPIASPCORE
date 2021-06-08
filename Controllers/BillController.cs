@@ -78,10 +78,14 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-        [Route("detail/{id}")]
-        public IActionResult AddBookEntryToBillDetail([FromBody] AddBookToBill model)
+        [Route("detail/{billId}")]
+        public IActionResult AddBookEntryToBillDetail(int billId,[FromBody] AddBookToBill model)
         {
-            return Ok();
+            var result = _repository.AddBookToBill(billId, model);
+
+            if(result == null)
+                return NotFound();
+            return Ok(result);
         }
 
         [HttpPost]
@@ -95,7 +99,14 @@ namespace BookStore.Controllers
         [Route("detail/delete/{billDetailID}")]
         public IActionResult DeleteBillDetailEntry(int billDetailID)
         {
-            return Ok();
+            var result = _repository.DeleteBillDetailEntry(billDetailID);
+
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
     }
 }

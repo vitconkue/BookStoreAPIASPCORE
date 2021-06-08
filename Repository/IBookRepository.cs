@@ -11,6 +11,8 @@ namespace BookStore.Repository
         List<Book> GetAllBooks(); 
         Book GetById(int id); 
 
+
+        BookAmountChangingRecord SaveNewBookAmountChangingRecord(int BookId, int AmountChanging, bool IsImport);
         Book AddBook(AddBookModel newBook);  
 
         EntityEntry DeleteById(int id);

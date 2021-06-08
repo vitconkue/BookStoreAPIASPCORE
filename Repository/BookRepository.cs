@@ -21,7 +21,26 @@ namespace BookStore.Repository
         {
             return _context.BookTypes.ToList();
         }
+        
+        public BookAmountChangingRecord SaveNewBookAmountChangingRecord(int BookId, int AmountChanging, bool IsImport)
+        {
+            var foundBook = _context.Books.FirstOrDefault(book => book.Id == BookId);
+            
+            if(foundBook == null)
+                return null;
+            int currentAmountBeforeChange = foundBook.CurrentAmount;
+            var record = new BookAmountChangingRecord
+            {
+                Book = foundBook,
+                AmountBeforeChanged = currentAmountBeforeChange,
+                AmountChanged = AmountChanging,
+                IsImport = IsImport
+            };
 
+            _context.Add(record);
+            _context.SaveChanges();
+            return record;
+        }
         public Book AddBook(AddBookModel newBook)
         {
             Book toAdd = new Book
@@ -74,39 +93,39 @@ namespace BookStore.Repository
                 return null;
             }
             int currentAmountBeforeChange = found.CurrentAmount; 
-            
-            BookType type = _context.BookTypes.FirstOrDefault(type => type.Id == changed.TypeID);
-            if (type == null)
-            {
-                return null;
-            }
-            int temp  = found.Id;
-            found.Title = changed.Title;
-            found.Author = changed.Author;
-            found.Type = type;
-            found.CurrentAmount = changed.Amount;
 
             // change in book amount
             if(changed.Amount != currentAmountBeforeChange)
             {
-                BookAmountChangingRecord record = new BookAmountChangingRecord();
-                record.Book = found;
-                record.IsImport = changed.Amount > currentAmountBeforeChange;
+                bool isImport  = changed.Amount > currentAmountBeforeChange;
+                int amountChanging  = 0 ; 
                 if(changed.Amount > currentAmountBeforeChange)
                 {
-                    record.AmountChanged = changed.Amount - currentAmountBeforeChange;
+                    amountChanging = changed.Amount - currentAmountBeforeChange;
                 }
                 else{
-                    record.AmountChanged = currentAmountBeforeChange - changed.Amount ;
+                    amountChanging = currentAmountBeforeChange - changed.Amount ;
 
                 }
-                _context.Add(record);
-
+                var recordAdd = SaveNewBookAmountChangingRecord(found.Id,amountChanging, isImport); 
 
             }
+            
+            BookType newType = _context.BookTypes.FirstOrDefault(type => type.Id == changed.TypeID);
+            if (newType == null)
+            {
+                return null;
+            }
+            found.Title = changed.Title;
+            found.Author = changed.Author;
+            found.Type = newType;
+            found.CurrentAmount = changed.Amount;
+
+            
             _context.SaveChanges();
 
             return found;
         }
+
     }
 }

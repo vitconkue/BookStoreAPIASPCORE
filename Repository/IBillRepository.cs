@@ -19,7 +19,9 @@ namespace BookStore.Repository
 
         List<BillDetail> GetSingleBillDetail(int id);
 
-        List<BillDetail> AddBookToBill(AddBookToBill model);
+        List<BillDetail> AddBookToBill(int BillId, AddBookToBill model);
+
+        EntityEntry DeleteBillDetailEntry(int billDetailId);
     }
 
 }

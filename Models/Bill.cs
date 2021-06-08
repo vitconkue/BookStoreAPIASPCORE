@@ -10,8 +10,8 @@ namespace BookStore.Models
         public int BillId {get;set;}
         [Required]
         virtual public Customer Customer {get;set;}
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get; set; } = DateTime.Now;
 
-        virtual public ICollection<BillDetail> Details {get;set;}
+        virtual public ICollection<BillDetail> Details {get;set;} = new List<BillDetail>();
     }
 }

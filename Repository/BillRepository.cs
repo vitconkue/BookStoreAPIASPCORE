@@ -13,14 +13,54 @@ namespace BookStore.Repository
     {
         private readonly AppDbContext _context;
 
-        public BillRepository(AppDbContext context)
+        public IBookRepository _bookRepository { get; }
+
+        public BillRepository(AppDbContext context, IBookRepository bookRepository)
         {
             _context = context;
+            _bookRepository = bookRepository;
         }
 
-        public List<BillDetail> AddBookToBill(AddBookToBill model)
+        public List<BillDetail> AddBookToBill(int BillId, AddBookToBill model)
         {
-            throw new NotImplementedException();
+            var result = new List<BillDetail>();
+            var foundBill = _context.Bills.FirstOrDefault(bill => bill.BillId == BillId);
+
+            var foundBook = _context.Books.FirstOrDefault(book => book.Id == model.BookId); 
+            
+            if(foundBill == null || foundBook == null)
+            {
+                return null;
+            }
+            
+            BillDetail newDetail = new BillDetail
+            {
+                Book = foundBook,
+                Amount = model.Amount,
+                Price = model.Price
+            };
+            foundBill.Details.Add(newDetail);
+            
+            
+
+            // update book amount changing record
+            var bookAmountChangingrecord = _bookRepository.SaveNewBookAmountChangingRecord(foundBook.Id,model.Amount,false);
+            // update current book amount
+            foundBook.CurrentAmount = foundBook.CurrentAmount - model.Amount;
+
+
+
+            // update debt record
+
+            _context.SaveChanges();
+
+
+            result = foundBill.Details.ToList();
+            
+
+            return result;            
+
+
         }
 
         public Bill CreateBill(AddBillModel model)
@@ -48,6 +88,19 @@ namespace BookStore.Repository
             _context.SaveChanges(); 
 
             return result;
+        }
+
+        public EntityEntry DeleteBillDetailEntry(int billDetailId)
+        {
+            var foundBillDetailEntry  = _context.BillsDetails.FirstOrDefault(entry => entry.BillDetailId == billDetailId);
+            if(foundBillDetailEntry == null)
+                return null;
+            var result = _context.Remove(foundBillDetailEntry);
+
+            _context.SaveChanges();
+
+            return result;
+            
         }
 
         public List<Bill> GetAllBills()

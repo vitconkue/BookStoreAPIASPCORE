@@ -1,24 +1,25 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System;
+
+
 namespace BookStore.Models
 {
-    public class BookAmountChangingRecord
+    public class CustomerDebtChangingRecord
     {
 
         [Key]
         public int RecordId {get;set;}
-        public Book Book {get;set;}
+        public Customer Book {get;set;}
 
        
 
         [Required]
-        public bool IsImport {get;set;}  = false;
+        public bool IsCollectMoney {get;set;}  = false;
 
         [Required]
-        public int AmountBeforeChanged {get;set;}
+        public int BeforeChangeAmount {get;set;}
 
-        public int AmountChanged {get;set;}
+        public int ChangeMoneyAmount {get;set;}
 
         public DateTime DateChanged{get;set;} = DateTime.Now;
             
