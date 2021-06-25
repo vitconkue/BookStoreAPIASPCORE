@@ -9,3 +9,5 @@ x86/
 packages
 /.vs
 /.vscode
+/ClassDiagram.cd
+/*.cd

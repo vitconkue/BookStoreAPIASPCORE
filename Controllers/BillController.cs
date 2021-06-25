@@ -13,7 +13,7 @@ namespace BookStore.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class BillController: Controller
+    public class BillController: ControllerBase
     {
         private readonly IBillRepository _repository;
 
