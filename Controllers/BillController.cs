@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using BookStore.Models;
 using BookStore.Repository;
 using Microsoft.Extensions.Logging;
-using BookStore.Errors;
 using BookStore.ActionModels;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using BookStore.DTO;
 
 namespace BookStore.Controllers

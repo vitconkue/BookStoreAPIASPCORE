@@ -21,6 +21,7 @@ namespace BookStore.Models
         public int AmountChanged {get;set;}
 
         public DateTime DateChanged{get;set;} = DateTime.Now;
+
             
     }
 }
