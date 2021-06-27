@@ -6,16 +6,19 @@ namespace BookStore.DTO
     public class BillDTO
     {
         public  int Id { get; set; }
-        public Customer Customer {get;set;}
+        public CustomerDTO Customer {get;set;}
 
         public string DateTime {get;set;}
+
+        public int Total {get;set;}
 
         public BillDTO(Bill source)
         {
             Id = source.BillId;
-            Customer = source.Customer;
+            Customer = new CustomerDTO(source.Customer) ;
             DateTime = source.DateTime.Date.ToString();
-        }
+            Total = source.Total;
+        }   
 
     
     }

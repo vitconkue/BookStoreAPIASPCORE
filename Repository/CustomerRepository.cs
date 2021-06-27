@@ -34,7 +34,8 @@ namespace BookStore.Repository
         {
             var x = _context.Customers
             .Include(customer => customer.Bills)
-            .ThenInclude(bill => bill.Details). ThenInclude(billDetail => billDetail.Book)
+            .ThenInclude(bill => bill.Details)
+            .ThenInclude(billDetail => billDetail.Book)
             .FirstOrDefault(customer => customer.Id == CustomerId);
             if(x == null)
             {
