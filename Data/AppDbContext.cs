@@ -25,7 +25,6 @@ namespace BookStore.Data
 
         public DbSet<Receipt> Receipts {get;set;}   
 
-        public DbSet<CustomerDebtChangingRecord>  CustomerDebtChangingRecord {get;set;}
 
     }
 }

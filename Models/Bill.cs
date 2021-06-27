@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace BookStore.Models
 {
@@ -13,5 +14,11 @@ namespace BookStore.Models
         public DateTime DateTime { get; set; } = DateTime.Now;
 
         virtual public ICollection<BillDetail> Details {get;set;} = new List<BillDetail>();
+        public int Total {
+            get {
+                return Details.ToList().Sum(detail => (detail.Price * detail.Amount));
+            }
+        }
+
     }
 }

@@ -3,15 +3,17 @@ using System;
 using BookStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BookStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210627062008_remove-debt-changing-record")]
+    partial class removedebtchangingrecord
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,7 +28,7 @@ namespace BookStore.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("DateTime")
@@ -210,25 +212,21 @@ namespace BookStore.Migrations
             modelBuilder.Entity("BookStore.Models.Bill", b =>
                 {
                     b.HasOne("BookStore.Models.Customer", "Customer")
-                        .WithMany("Bills")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
 
                     b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("BookStore.Models.BillDetail", b =>
                 {
-                    b.HasOne("BookStore.Models.Bill", "Bill")
+                    b.HasOne("BookStore.Models.Bill", null)
                         .WithMany("Details")
                         .HasForeignKey("BillId");
 
                     b.HasOne("BookStore.Models.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId");
-
-                    b.Navigation("Bill");
 
                     b.Navigation("Book");
                 });
@@ -263,11 +261,6 @@ namespace BookStore.Migrations
             modelBuilder.Entity("BookStore.Models.Bill", b =>
                 {
                     b.Navigation("Details");
-                });
-
-            modelBuilder.Entity("BookStore.Models.Customer", b =>
-                {
-                    b.Navigation("Bills");
                 });
 #pragma warning restore 612, 618
         }

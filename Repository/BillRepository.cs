@@ -24,7 +24,7 @@ namespace BookStore.Repository
         public List<BillDetail> AddBookToBill(int BillId, AddBookToBill model)
         {
             var result = new List<BillDetail>();
-            var foundBill = _context.Bills.FirstOrDefault(bill => bill.BillId == BillId);
+            var foundBill = _context.Bills.Include(bill => bill.Customer).FirstOrDefault(bill => bill.BillId == BillId);
 
             var foundBook = _context.Books.FirstOrDefault(book => book.Id == model.BookId); 
             
@@ -40,28 +40,29 @@ namespace BookStore.Repository
                 Price = model.Price
             };
             foundBill.Details.Add(newDetail);
-            
-            
-
-            // update book amount changing record
-            var bookAmountChangingrecord = _bookRepository.SaveNewBookAmountChangingRecord(foundBook.Id,model.Amount,false);
             // update current book amount
             foundBook.CurrentAmount = foundBook.CurrentAmount - model.Amount;
-
-
-
-            // update debt record
-
-            _context.SaveChanges();
-
-
+            // update customer debt
+            var currentCustomer = foundBill.Customer; 
+            currentCustomer.CurrentDebt += model.Amount * model.Price;
+            
             result = foundBill.Details.ToList();
+            _context.SaveChanges();
             
 
+
             return result;            
+    
+
+
+
+            
+
 
 
         }
+
+
 
         public Bill CreateBill(AddBillModel model)
         {
@@ -132,9 +133,77 @@ namespace BookStore.Repository
             return result;
         }
 
-        public Bill UpdateBill()
+        public BillDetail UpdateSingleBillEntry(UpdateBillEntryModel model)
         {
-            throw new System.NotImplementedException();
+            BillDetail foundBillDetail = _context.BillsDetails
+            // .Include(billDetail => billDetail.Bill)  
+            // .ThenInclude(bill => bill.Customer)
+            .FirstOrDefault(billDetail => billDetail.BillDetailId == model.BillDetailId);
+
+            if(foundBillDetail == null)
+                return null;
+          
+            // save
+            
+                // is changed book check point
+            Book foundBook = _context.Books.FirstOrDefault(book => book.Id == model.newBookId); 
+            if(foundBook == null)
+            {
+                return null; 
+            }
+
+            int oldBillAmount = foundBillDetail.Amount;
+            
+            int oldBillPrice = foundBillDetail.Price;
+
+            int oldBookAmount = foundBook.CurrentAmount; 
+
+            //int oldCustomerDebt = foundBillDetail.Bill.Customer.CurrentDebt;
+
+            int oldCustomerDebt  =0 ; 
+                // amount checkpoint
+            if(model.newAmount <= 0) 
+                return null; 
+
+                // price checkpoint
+            if(model.newPrice  < 0 )
+                return null;
+
+            foundBillDetail.Book = foundBook;
+            foundBillDetail.Amount = model.newAmount;
+            foundBillDetail.Price = model.newPrice;
+
+
+            // save new book amount and customer debt
+            int newBookAmount = 0 ; 
+
+            if(model.newAmount > oldBillAmount)
+            {
+                newBookAmount = oldBookAmount - (model.newAmount - oldBillAmount); 
+            }
+
+            else{
+                newBookAmount = oldBookAmount + (oldBillAmount - model.newAmount ); 
+            }
+            foundBook.CurrentAmount = newBookAmount;
+
+            int newCustomerDebt = 0 ; 
+            if(model.newPrice * model.newAmount > oldBillAmount * oldBillPrice)
+            {
+                newCustomerDebt = oldCustomerDebt + (model.newPrice * model.newAmount - oldBillAmount * oldBillPrice);
+            }
+            else{
+                newCustomerDebt = oldCustomerDebt - (oldBillAmount * oldBillPrice - model.newPrice * model.newAmount );
+
+            }
+                
+            //foundBillDetail.Bill.Customer.CurrentDebt = newCustomerDebt;
+
+
+            _context.SaveChanges();
+            return foundBillDetail;                  
+
+        
         }
     }
 }

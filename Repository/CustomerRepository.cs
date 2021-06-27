@@ -3,6 +3,8 @@ using BookStore.Models;
 using BookStore.Data;
 using System.Linq;
 using BookStore.ActionModels;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace BookStore.Repository
 {
@@ -26,6 +28,23 @@ namespace BookStore.Repository
             _context.SaveChanges();
             return newCustomer;
             
+        }
+
+        public int? CalculateTotalDebt(int CustomerId)
+        {
+            var x = _context.Customers
+            .Include(customer => customer.Bills)
+            .ThenInclude(bill => bill.Details). ThenInclude(billDetail => billDetail.Book)
+            .FirstOrDefault(customer => customer.Id == CustomerId);
+            if(x == null)
+            {
+                return null; 
+            }
+            int sumAllBill = x.Bills.ToList().Sum(bill => bill.Total); 
+             
+            // TODO: Sum all receipt
+            int sumAllReceipt = 0 ; 
+            return sumAllBill - sumAllReceipt; 
         }
 
         public List<Customer> GetAllCustomers()

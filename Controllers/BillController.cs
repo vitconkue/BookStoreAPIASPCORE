@@ -45,7 +45,7 @@ namespace BookStore.Controllers
             var result = _repository.GetSingleBill(id);
             if(result == null)
                 return NotFound();
-            return Ok( BillDTO.GetDTO(result)); 
+            return Ok( new BillDTO(result)); 
         }
 
         [HttpPost]
@@ -86,7 +86,7 @@ namespace BookStore.Controllers
 
         [HttpPost]
         [Route("detail/update/")]
-        public IActionResult UpdateBillDetailEntry()
+        public IActionResult UpdateBillDetailEntry([FromBody] UpdateBillEntryModel model)
         {
             return Ok();
         }

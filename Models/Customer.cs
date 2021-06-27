@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookStore.Models
@@ -18,5 +19,11 @@ namespace BookStore.Models
 
         
         public int CurrentDebt {get;set;} = 0 ;
+
+        virtual public ICollection<Bill> Bills {get;set;} = new List<Bill>();
+
+        
+
+        
     }
 }

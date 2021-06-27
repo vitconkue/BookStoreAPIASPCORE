@@ -8,16 +8,15 @@ namespace BookStore.DTO
         public  int Id { get; set; }
         public Customer Customer {get;set;}
 
-        public DateTime DateTime {get;set;}
+        public string DateTime {get;set;}
 
-        static public object  GetDTO(Bill Bill)
+        public BillDTO(Bill source)
         {
-            return new  {
-                Id = Bill.BillId,
-                Customer = Bill.Customer,
-                DateTime = Bill.DateTime.Date.ToString()
-            };
+            Id = source.BillId;
+            Customer = source.Customer;
+            DateTime = source.DateTime.Date.ToString();
         }
 
+    
     }
 }

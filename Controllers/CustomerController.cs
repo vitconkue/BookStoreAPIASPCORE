@@ -3,6 +3,8 @@ using BookStore.Repository;
 using Microsoft.Extensions.Logging;
 using BookStore.ActionModels;
 using BookStore.Models;
+using BookStore.DTO;
+using System.Linq;
 
 namespace BookStore.Controllers
 {
@@ -19,6 +21,7 @@ namespace BookStore.Controllers
             _repository = repository;
         }
 
+
         public IActionResult GetAllCustomer()
         {
             var result = _repository.GetAllCustomers();
@@ -26,17 +29,27 @@ namespace BookStore.Controllers
             {
                 return NotFound();
             }
-            return Ok(result);
+            return Ok(result.Select(obj => new CustomerDTO(obj)));
         }
 
-        [Route("/{id}")]
+        [Route("{id}")]
         public IActionResult GetSingleCustomer(int id)
         {
             var found = _repository.GetSingleCustomer( id);
             if(found == null)
                 return NotFound();
-            return Ok(found);
+            return Ok(new CustomerDTO(found));
         }
+
+        [Route("debt/{id}")]
+        public IActionResult GetSingleCustomerDebt(int id)
+        {
+            var result = _repository.CalculateTotalDebt( id);
+            if(result == null)
+                return BadRequest();
+            return Ok(result);
+        }
+
 
         [HttpPost]
         public IActionResult AddCustomer([FromBody] AddCustomerModel model)
@@ -47,7 +60,7 @@ namespace BookStore.Controllers
             {
                 return BadRequest(new {Error = "Failed adding customer, contact An"}); 
             }
-            return Ok(newCustomer);
+            return Ok( new CustomerDTO(newCustomer));
         }
     }
 }
