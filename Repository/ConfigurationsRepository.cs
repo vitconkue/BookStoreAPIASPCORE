@@ -41,6 +41,20 @@ namespace BookStore.Repository
             }
 
         }
+
+        public Configuration ChangeConfiguration(string ConfigurationName, int value)
+        {
+            Configuration found = GetSingleConfiguration(ConfigurationName);
+            if(found == null)
+            {
+                return null;
+            }
+            found.Value = value; 
+
+            _context.SaveChanges();
+            return found;
+
+        }
         
     }
 }

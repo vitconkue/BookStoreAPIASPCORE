@@ -42,6 +42,17 @@ namespace BookStore.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("{name}/{value}")]
+
+        public IActionResult ChangeConfiguration(string name, int value )
+        {
+            var result = _repository.ChangeConfiguration(name,value);
+            if(result == null)
+                return NotFound();
+            return Ok(result);
+        }
+
         [Route("toggle/{name}")]
         [HttpPost]
         public IActionResult toggleConfiguration(string name)

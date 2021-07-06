@@ -11,6 +11,6 @@ namespace BookStore.Repository
 
          Configuration GetSingleConfiguration(string ConfigurationName); 
 
-        
+         Configuration ChangeConfiguration(string ConfigurationName, int value);
     }
 }
