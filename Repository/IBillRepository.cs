@@ -13,11 +13,13 @@ namespace BookStore.Repository
         Bill GetSingleBill(int id);
 
         Bill CreateBill(AddBillModel model); 
-        BillDetail UpdateSingleBillEntry(UpdateBillEntryModel model);
+        BillDetail UpdateSingleBillEntry(int billDetailID,UpdateBillEntryModel model);
 
         List<BillDetail> GetSingleBillDetail(int id);
 
         List<BillDetail> AddBookToBill(int BillId, AddBookToBill model);
+
+        List<BillDetail> BulkAddBookToBill(int BillId, List<AddBookToBill> model);
 
         EntityEntry DeleteBillDetailEntry(int billDetailId);
     }

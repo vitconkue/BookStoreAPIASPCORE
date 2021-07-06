@@ -14,7 +14,7 @@ namespace BookStore.Models
         public int Amount {get;set;}
 
 
-        //virtual public Bill Bill {get;set;}
+        virtual public Bill Bill {get;set;}
 
         
     }

@@ -3,6 +3,7 @@ using BookStore.Repository;
 using Microsoft.Extensions.Logging;
 using BookStore.ActionModels;
 using BookStore.DTO;
+using System.Collections.Generic;
 
 namespace BookStore.Controllers
 {
@@ -75,20 +76,24 @@ namespace BookStore.Controllers
 
         [HttpPost]
         [Route("detail/{billId}")]
-        public IActionResult AddBookEntryToBillDetail(int billId,[FromBody] AddBookToBill model)
+        public IActionResult AddBookEntryToBillDetail(int billId,[FromBody] List<AddBookToBill> model)
         {
-            var result = _repository.AddBookToBill(billId, model);
+            var result = _repository.BulkAddBookToBill(billId, model);
 
             if(result == null)
                 return NotFound();
-            return Ok(result);
+            return Ok();
         }
 
         [HttpPost]
-        [Route("detail/update/")]
-        public IActionResult UpdateBillDetailEntry([FromBody] UpdateBillEntryModel model)
+        [Route("detail/update/{billDetailID}")]
+        public IActionResult UpdateBillDetailEntry(int billDetailID, [FromBody] UpdateBillEntryModel model)
         {
-            return Ok();
+            var result = _repository.UpdateSingleBillEntry(billDetailID,model); 
+
+            if(result == null)
+                return BadRequest();
+            return Ok(new BillDetailDTO(result));
         }
 
         [HttpPost]

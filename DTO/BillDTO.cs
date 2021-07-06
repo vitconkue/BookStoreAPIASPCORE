@@ -15,7 +15,8 @@ namespace BookStore.DTO
         public BillDTO(Bill source)
         {
             Id = source.BillId;
-            Customer = new CustomerDTO(source.Customer) ;
+            Customer = new CustomerDTO
+            (source.Customer) ;
             DateTime = source.DateTime.Date.ToString();
             Total = source.Total;
         }   

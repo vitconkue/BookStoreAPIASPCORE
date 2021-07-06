@@ -23,6 +23,28 @@ namespace BookStore.Repository
             return result;
             
         }
+
+        public async Task<Receipt> AddReceipt(AddReceiptActionModel model)
+        {
+            var foundCustomer = await _context.Customers.FirstOrDefaultAsync(customer => customer.Id == model.CustomerId); 
+            if(foundCustomer == null)
+            {
+                return null; 
+            }
+
+            Receipt newReceipt = new Receipt {
+                Customer = foundCustomer,
+                MoneyAmount = model.MoneyAmount,
+                DateTime = DateTime.Now
+                
+            }   ;
+
+            // subtract debt
+            foundCustomer.CurrentDebt -= model.MoneyAmount;
+            _ =  await  _context.Receipts.AddAsync(newReceipt); 
+
+            return newReceipt;
+        }
     }
 
 

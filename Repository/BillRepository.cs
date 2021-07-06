@@ -7,6 +7,7 @@ using BookStore.ActionModels;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 
+
 namespace BookStore.Repository
 {
     public class BillRepository : IBillRepository
@@ -24,7 +25,10 @@ namespace BookStore.Repository
         public List<BillDetail> AddBookToBill(int BillId, AddBookToBill model)
         {
             var result = new List<BillDetail>();
-            var foundBill = _context.Bills.Include(bill => bill.Customer).FirstOrDefault(bill => bill.BillId == BillId);
+
+            var foundBill = _context.Bills
+            .Include(bill => bill.Customer)
+            .FirstOrDefault(bill => bill.BillId == BillId);
 
             var foundBook = _context.Books.FirstOrDefault(book => book.Id == model.BookId); 
             
@@ -52,12 +56,6 @@ namespace BookStore.Repository
 
 
             return result;            
-    
-
-
-
-            
-
 
 
         }
@@ -136,12 +134,12 @@ namespace BookStore.Repository
             return result;
         }
 
-        public BillDetail UpdateSingleBillEntry(UpdateBillEntryModel model)
+        public BillDetail UpdateSingleBillEntry(int billDetailID,UpdateBillEntryModel model)
         {
             BillDetail foundBillDetail = _context.BillsDetails
             // .Include(billDetail => billDetail.Bill)  
             // .ThenInclude(bill => bill.Customer)
-            .FirstOrDefault(billDetail => billDetail.BillDetailId == model.BillDetailId);
+            .FirstOrDefault(billDetail => billDetail.BillDetailId == billDetailID);
 
             if(foundBillDetail == null)
                 return null;
@@ -207,6 +205,44 @@ namespace BookStore.Repository
             return foundBillDetail;                  
 
         
+        }
+
+        public List<BillDetail> BulkAddBookToBill(int BillId, List<AddBookToBill> model)
+        {
+            var result = new List<BillDetail>();
+            
+            var foundBill = _context.Bills
+            .Include(bill => bill.Customer)
+            .FirstOrDefault(bill => bill.BillId == BillId);
+
+            List<int> BookIdToAdd = model.Select(model => model.BookId).ToList(); 
+
+            List<Book> BookToAdd = _context.Books.Where(book => BookIdToAdd.Contains( book.Id)).ToList();
+            
+            // create new bill details
+
+            List<BillDetail> newBillDetails = new List<BillDetail>(); 
+
+            int count = BookToAdd.Count;
+            for(int i = 0;  i < count; ++i)
+            {
+                newBillDetails.Add(
+                    new BillDetail {
+                        Book = BookToAdd[i],
+                        Amount = model[i].Amount,
+                        Price = model[i].Price,
+                        Bill = foundBill,
+                    }
+                );
+
+                foundBill.Customer.CurrentDebt += model[i].Amount * model[i].Price;
+                BookToAdd[i].CurrentAmount -= model[i].Amount;
+            }
+
+             _context.BillsDetails.AddRange(newBillDetails);
+            _context.SaveChanges();
+
+            return newBillDetails;
         }
     }
 }
