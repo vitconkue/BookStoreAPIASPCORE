@@ -5,7 +5,8 @@ namespace BookStore.DTO
 {
     public class BillDetailDTO
     {
-        public BillDTO Bill {get;set;}
+
+        public int BillDetailId {get;set;}
 
         public int BookID {get;set;}
 
@@ -14,7 +15,7 @@ namespace BookStore.DTO
 
         public BillDetailDTO(BillDetail source)
         {
-            Bill = new BillDTO(source.Bill);
+            BillDetailId = source.BillDetailId; 
             BookID = source.Book.Id;
             Price = source.Price;
             Amount = source.Amount;

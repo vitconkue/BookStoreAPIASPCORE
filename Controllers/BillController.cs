@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using BookStore.ActionModels;
 using BookStore.DTO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BookStore.Controllers
 {
@@ -30,7 +31,7 @@ namespace BookStore.Controllers
             if(result.Count == 0)
                 return NotFound();
 
-            return Ok(result);
+            return Ok(result.Select(bill => new BillDTO(bill)));
         }
 
         [HttpPost]
@@ -70,7 +71,9 @@ namespace BookStore.Controllers
                 return NotFound();
             }
 
-            return Ok(result);
+            var resultDTO = result.Select(billDe=> new BillDetailDTO(billDe));
+
+            return Ok(resultDTO);
 
         }
 

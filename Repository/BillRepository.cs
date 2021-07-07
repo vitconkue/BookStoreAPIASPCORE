@@ -124,6 +124,7 @@ namespace BookStore.Repository
             Bill found = _context.Bills
             .Include(bill => bill.Details)
             .ThenInclude(detail => detail.Book)
+            .Include(bill =>bill.Customer)
             .FirstOrDefault(bill => bill.BillId == id); 
             if(found == null)
                 return null;
