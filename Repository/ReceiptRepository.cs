@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BookStore.Data;
 using BookStore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BookStore.Repository
 {
@@ -42,8 +43,50 @@ namespace BookStore.Repository
             // subtract debt
             foundCustomer.CurrentDebt -= model.MoneyAmount;
             _ =  await  _context.Receipts.AddAsync(newReceipt); 
-
+            _context.SaveChanges();
             return newReceipt;
+        }
+
+        public async Task<Receipt> GetSingleReceipt(int id)
+        {
+            var result = await _context.Receipts.FirstOrDefaultAsync(receipt => receipt.ReceiptID == id); 
+
+            return result;
+        }
+
+        public async Task<Receipt> EditReceipt(UpdateReceiptActionModel model)
+        {
+            Receipt found = await 
+            _context.Receipts.Include(receipt => receipt.Customer).FirstOrDefaultAsync(receipt => receipt.ReceiptID == model.ReceiptID);
+
+            if(found == null)
+                return null;
+            
+            found.MoneyAmount = model.MoneyAmount; 
+            
+            if(found.Customer.Id != model.CustomerId)
+            {
+                var newCustomer = await _context.Customers.FirstOrDefaultAsync(customer => customer.Id == model.CustomerId); 
+                found.Customer = newCustomer; 
+            }
+            await _context.SaveChangesAsync(); 
+
+            return found;
+
+        }
+
+        public  async Task<EntityEntry> DeleteReceipt(int id)
+        {
+            Receipt found = await 
+            _context.Receipts.Include(receipt => receipt.Customer).FirstOrDefaultAsync(receipt => receipt.ReceiptID == id);
+
+            if(found == null)
+            {
+                return null;
+            }
+            var result = _context.Receipts.Remove(found);
+
+            return result;
         }
     }
 
