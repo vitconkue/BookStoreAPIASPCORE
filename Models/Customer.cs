@@ -23,7 +23,7 @@ namespace BookStore.Models
         virtual public ICollection<Bill> Bills {get;set;} = new List<Bill>();
 
         
-
+        virtual public ICollection<Receipt> Receipts {get;set;} = new List<Receipt>();
         
     }
 }

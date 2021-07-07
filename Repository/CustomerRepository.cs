@@ -44,7 +44,9 @@ namespace BookStore.Repository
             int sumAllBill = x.Bills.ToList().Sum(bill => bill.Total); 
              
             // TODO: Sum all receipt
-            int sumAllReceipt = 0 ; 
+            int sumAllReceipt = 0 ;
+
+            //List<Receipt> customerReceipts = _context.Receipts.Where(receipt => receipt.Customer.Id == ) 
             return sumAllBill - sumAllReceipt; 
         }
 

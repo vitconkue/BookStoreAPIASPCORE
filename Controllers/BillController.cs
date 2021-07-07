@@ -37,7 +37,7 @@ namespace BookStore.Controllers
         public IActionResult AddNewBill([FromBody] AddBillModel model)
         {
             var result = _repository.CreateBill(model);
-            return Ok(result);
+            return Ok(new BillDTO(result) );
         }
 
         [Route("{id}")]
