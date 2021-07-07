@@ -38,7 +38,7 @@ namespace BookStore.Repository
                 MoneyAmount = model.MoneyAmount,
                 DateTime = DateTime.Now
                 
-            }   ;
+            };
 
             // subtract debt
             foundCustomer.CurrentDebt -= model.MoneyAmount;

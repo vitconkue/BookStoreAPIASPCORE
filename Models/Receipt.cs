@@ -11,5 +11,6 @@ namespace BookStore.Models
         public int MoneyAmount {get;set;}
 
         public DateTime DateTime {get;set;}
+
     }
 }

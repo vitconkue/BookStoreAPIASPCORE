@@ -11,5 +11,13 @@ namespace BookStore.DTO
         public int MoneyAmount {get;set;}
 
         public DateTime DateTime {get;set;}
+
+        public ReceiptDTO(Receipt source)
+        {
+            ReceiptID = source.ReceiptID;
+            Customer = new CustomerDTO( source.Customer);
+            MoneyAmount = source.MoneyAmount; 
+            DateTime = source.DateTime;
+        }
     }
 }

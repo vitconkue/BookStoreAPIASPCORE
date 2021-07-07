@@ -13,5 +13,7 @@ namespace BookStore.Repository
         Customer AddCustomer(AddCustomerModel addCustomerModel);
 
         int? CalculateTotalDebt(int CustomerId);
+
+        void RefreshCustomerDebtField(int customerId);
     }
 }

@@ -32,22 +32,37 @@ namespace BookStore.Repository
 
         public int? CalculateTotalDebt(int CustomerId)
         {
-            var x = _context.Customers
+            var customer = _context.Customers
             .Include(customer => customer.Bills)
             .ThenInclude(bill => bill.Details)
             .ThenInclude(billDetail => billDetail.Book)
+            .Include(customer => customer.Receipts)
             .FirstOrDefault(customer => customer.Id == CustomerId);
-            if(x == null)
+            if(customer == null)
             {
                 return null; 
             }
-            int sumAllBill = x.Bills.ToList().Sum(bill => bill.Total); 
+            int sumAllBill = customer.Bills.ToList().Sum(bill => bill.Total); 
              
             // TODO: Sum all receipt
-            int sumAllReceipt = 0 ;
+            int sumAllReceipt = customer.Receipts.ToList().Sum(receipt => receipt.MoneyAmount );
 
-            //List<Receipt> customerReceipts = _context.Receipts.Where(receipt => receipt.Customer.Id == ) 
             return sumAllBill - sumAllReceipt; 
+        }
+
+        public void RefreshCustomerDebtField(int customerId)
+        {
+            Customer found = _context.Customers.FirstOrDefault(customer => customer.Id == customerId); 
+            if(found == null)
+                return;
+            int? newDebt = CalculateTotalDebt(customerId); 
+            
+            if(newDebt == null)
+                return;
+            
+            found.CurrentDebt = newDebt.Value;
+            _context.SaveChanges();
+            
         }
 
         public List<Customer> GetAllCustomers()
@@ -64,6 +79,8 @@ namespace BookStore.Repository
                 return null;
             return found;
         }
+
+      
     }
 
 
