@@ -26,7 +26,7 @@ namespace BookStore.Controllers
             _repository = repository;
         }
         [HttpGet]
-        public IActionResult GetAllBook()
+        public IActionResult GetAllBook([FromQuery] string typeId, [FromQuery] string searchString)
         {
             _logger.LogInformation("A client is getting all books");
             var result = _repository.GetAllBooks();

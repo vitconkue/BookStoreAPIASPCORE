@@ -14,12 +14,15 @@ namespace BookStore.Repository
     {
         private readonly AppDbContext _context;
 
-        public IBookRepository _bookRepository { get; }
+        private IBookRepository _bookRepository { get; }
 
-        public BillRepository(AppDbContext context, IBookRepository bookRepository)
+        private readonly ICustomerRepository _customerRepository;
+
+        public BillRepository(AppDbContext context, IBookRepository bookRepository, ICustomerRepository customerRepository)
         {
             _context = context;
             _bookRepository = bookRepository;
+            _customerRepository = customerRepository;
         }
 
         public List<BillDetail> AddBookToBill(int BillId, AddBookToBill model)
@@ -83,20 +86,28 @@ namespace BookStore.Repository
                 return null;
             }
             var result = _context.Remove(found); 
+            _context.SaveChanges();
 
-            _context.SaveChanges(); 
+            _customerRepository.RefreshCustomerDebtField(found.Customer.Id); 
+
 
             return result;
         }
 
         public EntityEntry DeleteBillDetailEntry(int billDetailId)
         {
-            var foundBillDetailEntry  = _context.BillsDetails.FirstOrDefault(entry => entry.BillDetailId == billDetailId);
+            var foundBillDetailEntry  = _context.BillsDetails
+            .Include(billDetail => billDetail.Bill)
+            .ThenInclude(bill => bill.Customer).FirstOrDefault(entry => entry.BillDetailId == billDetailId);
             if(foundBillDetailEntry == null)
                 return null;
+            
+
             var result = _context.Remove(foundBillDetailEntry);
 
             _context.SaveChanges();
+            _customerRepository.RefreshCustomerDebtField(foundBillDetailEntry.Bill.Customer.Id); 
+
 
             return result;
             
@@ -138,8 +149,8 @@ namespace BookStore.Repository
         public BillDetail UpdateSingleBillEntry(int billDetailID,UpdateBillEntryModel model)
         {
             BillDetail foundBillDetail = _context.BillsDetails
-            // .Include(billDetail => billDetail.Bill)  
-            // .ThenInclude(bill => bill.Customer)
+             .Include(billDetail => billDetail.Bill)  
+            .ThenInclude(bill => bill.Customer)
             .FirstOrDefault(billDetail => billDetail.BillDetailId == billDetailID);
 
             if(foundBillDetail == null)
@@ -162,7 +173,6 @@ namespace BookStore.Repository
 
             //int oldCustomerDebt = foundBillDetail.Bill.Customer.CurrentDebt;
 
-            int oldCustomerDebt  =0 ; 
                 // amount checkpoint
             if(model.newAmount <= 0) 
                 return null; 
@@ -189,20 +199,10 @@ namespace BookStore.Repository
             }
             foundBook.CurrentAmount = newBookAmount;
 
-            int newCustomerDebt = 0 ; 
-            if(model.newPrice * model.newAmount > oldBillAmount * oldBillPrice)
-            {
-                newCustomerDebt = oldCustomerDebt + (model.newPrice * model.newAmount - oldBillAmount * oldBillPrice);
-            }
-            else{
-                newCustomerDebt = oldCustomerDebt - (oldBillAmount * oldBillPrice - model.newPrice * model.newAmount );
-
-            }
-                
-            //foundBillDetail.Bill.Customer.CurrentDebt = newCustomerDebt;
-
 
             _context.SaveChanges();
+
+            _customerRepository.RefreshCustomerDebtField(foundBillDetail.Bill.Customer.Id);
             return foundBillDetail;                  
 
         
@@ -236,12 +236,13 @@ namespace BookStore.Repository
                     }
                 );
 
-                foundBill.Customer.CurrentDebt += model[i].Amount * model[i].Price;
                 BookToAdd[i].CurrentAmount -= model[i].Amount;
             }
 
              _context.BillsDetails.AddRange(newBillDetails);
             _context.SaveChanges();
+
+            _customerRepository.RefreshCustomerDebtField(foundBill.Customer.Id);
 
             return newBillDetails;
         }

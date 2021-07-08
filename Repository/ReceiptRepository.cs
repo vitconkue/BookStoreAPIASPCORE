@@ -13,9 +13,12 @@ namespace BookStore.Repository
     {
         private readonly AppDbContext _context;
 
-        public ReceiptRepository(AppDbContext context)
+        public ICustomerRepository _customerRepository { get; }
+
+        public ReceiptRepository(AppDbContext context, ICustomerRepository customerRepository)
         {
             _context = context;
+            _customerRepository = customerRepository;
         }
         public async Task<List<Receipt>> GetAll()
         {
@@ -44,6 +47,8 @@ namespace BookStore.Repository
             foundCustomer.CurrentDebt -= model.MoneyAmount;
             _ =  await  _context.Receipts.AddAsync(newReceipt); 
             _context.SaveChanges();
+
+            _customerRepository.RefreshCustomerDebtField(foundCustomer.Id);
             return newReceipt;
         }
 
@@ -57,7 +62,9 @@ namespace BookStore.Repository
         public async Task<Receipt> EditReceipt(UpdateReceiptActionModel model)
         {
             Receipt found = await 
-            _context.Receipts.Include(receipt => receipt.Customer).FirstOrDefaultAsync(receipt => receipt.ReceiptID == model.ReceiptID);
+            _context.Receipts
+            .Include(receipt => receipt.Customer)
+            .FirstOrDefaultAsync(receipt => receipt.ReceiptID == model.ReceiptID);
 
             if(found == null)
                 return null;
@@ -70,6 +77,7 @@ namespace BookStore.Repository
                 found.Customer = newCustomer; 
             }
             await _context.SaveChangesAsync(); 
+             _customerRepository.RefreshCustomerDebtField(found.Customer.Id);
 
             return found;
 
@@ -84,7 +92,12 @@ namespace BookStore.Repository
             {
                 return null;
             }
-            var result = _context.Receipts.Remove(found);
+            var result =  _context.Receipts.Remove(found);
+
+            await _context.SaveChangesAsync(); 
+            
+            _customerRepository.RefreshCustomerDebtField(found.Customer.Id);    
+            
 
             return result;
         }
