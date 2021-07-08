@@ -78,7 +78,10 @@ namespace BookStore.Repository
 
         public EntityEntry DeleteBill(int id)
         {
-            Bill found = _context.Bills.Include(bill => bill.Customer).FirstOrDefault(bill => bill.BillId == id);
+            Bill found = _context.Bills
+            .Include(bill => bill.Customer)
+            .Include(bill => bill.Details)
+            .FirstOrDefault(bill => bill.BillId == id);
             if(found == null)
             {    
                 return null;
