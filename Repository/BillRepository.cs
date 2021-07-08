@@ -63,8 +63,6 @@ namespace BookStore.Repository
 
         }
 
-
-
         public Bill CreateBill(AddBillModel model)
         {
             var foundCustomer = _context.Customers.FirstOrDefault(Customer=> Customer.Id == model.CustomerID);

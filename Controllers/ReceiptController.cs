@@ -48,6 +48,31 @@ namespace BookStore.Controllers
             return Ok(new ReceiptDTO(result)); 
 
         }
+
+        [HttpPost]
+        [Route("update")]
+        public async Task<IActionResult> UpdateReceipt([FromBody] UpdateReceiptActionModel model)
+        {
+
+            var result = await _repo.EditReceipt(model); 
+            if(result == null)
+            {
+                return NotFound();
+            }
+            return Ok(new ReceiptDTO(result));
+        }
+
+        [HttpPost]
+        [Route("delete/{id}")]
+
+        public async Task<IActionResult> DeleteReceipt(int id)
+        {
+            var result = await _repo.DeleteReceipt(id);
+            if(result == null)
+                return NotFound();
+            return Ok();
+        }
+
     }
 
 }

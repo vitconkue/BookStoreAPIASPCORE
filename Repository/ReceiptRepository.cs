@@ -22,7 +22,10 @@ namespace BookStore.Repository
         }
         public async Task<List<Receipt>> GetAll()
         {
-            var result = await _context.Receipts.OrderByDescending(receipt => receipt.DateTime).ToListAsync(); 
+            var result = await _context.Receipts
+            .Include(receipt => receipt.Customer)
+            .OrderByDescending(receipt => receipt.DateTime)
+            .ToListAsync(); 
 
             return result;
             
@@ -54,7 +57,10 @@ namespace BookStore.Repository
 
         public async Task<Receipt> GetSingleReceipt(int id)
         {
-            var result = await _context.Receipts.FirstOrDefaultAsync(receipt => receipt.ReceiptID == id); 
+            var result = await _context
+            .Receipts
+            .Include(receipt => receipt.Customer)
+            .FirstOrDefaultAsync(receipt => receipt.ReceiptID == id); 
 
             return result;
         }
@@ -71,9 +77,9 @@ namespace BookStore.Repository
             
             found.MoneyAmount = model.MoneyAmount; 
             
-            if(found.Customer.Id != model.CustomerId)
+            if(found.Customer.Id != model.CustomerID)
             {
-                var newCustomer = await _context.Customers.FirstOrDefaultAsync(customer => customer.Id == model.CustomerId); 
+                var newCustomer = await _context.Customers.FirstOrDefaultAsync(customer => customer.Id == model.CustomerID); 
                 found.Customer = newCustomer; 
             }
             await _context.SaveChangesAsync(); 
