@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using BookStore.Models;
+using BookStore.ActionModels;
 
 namespace BookStore.Repository
 {
@@ -12,5 +13,7 @@ namespace BookStore.Repository
          Configuration GetSingleConfiguration(string ConfigurationName); 
 
          Configuration ChangeConfiguration(string ConfigurationName, int value);
+
+         List<Configuration> BulkUpdateConfigurations(BulkUpdateConfigurationActionModel actionModel);
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BookStore.Repository;
 using Microsoft.Extensions.Logging;
-
+using BookStore.ActionModels;
 
 namespace BookStore.Controllers
 {
@@ -50,6 +50,14 @@ namespace BookStore.Controllers
             var result = _repository.ChangeConfiguration(name,value);
             if(result == null)
                 return NotFound();
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("update")]
+        public IActionResult BulkChangeConfiguration([FromBody] BulkUpdateConfigurationActionModel model)
+        {
+            var result = _repository.BulkUpdateConfigurations(model); 
             return Ok(result);
         }
 

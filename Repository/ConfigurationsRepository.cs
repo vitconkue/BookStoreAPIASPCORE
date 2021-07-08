@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using BookStore.Models;
 using BookStore.Data;
 using System.Linq;
+using BookStore.ActionModels;
 
 namespace BookStore.Repository
 {
@@ -55,6 +56,36 @@ namespace BookStore.Repository
             return found;
 
         }
-        
+
+        public List<Configuration> BulkUpdateConfigurations(BulkUpdateConfigurationActionModel actionModel)
+        {
+            List<Configuration> result = new List<Configuration>(); 
+            Configuration MinimumImportBook = GetSingleConfiguration("MinimumImportBook"); 
+
+            MinimumImportBook.Value = actionModel.MinimumImportBook; 
+            
+            Configuration MaximumAmountBookLeftBeforeImport = GetSingleConfiguration("MaximumAmountBookLeftBeforeImport"); 
+
+            MaximumAmountBookLeftBeforeImport.Value = actionModel.MaximumAmountBookLeftBeforeImport; 
+
+
+            Configuration MaximumDebtCustomer = GetSingleConfiguration("MaximumDebtCustomer"); 
+
+            MaximumDebtCustomer.Value = actionModel.MaximumDebtCustomer;
+
+            Configuration MinimumAmountBookLeftAfterSelling = GetSingleConfiguration("MinimumAmountBookLeftAfterSelling"); 
+
+            MinimumAmountBookLeftAfterSelling.Value = actionModel.MinimumAmountBookLeftAfterSelling;
+
+            _context.SaveChanges();
+
+            result.AddRange(new List<Configuration> 
+            {MinimumImportBook,
+            MaximumAmountBookLeftBeforeImport,
+            MaximumDebtCustomer,
+            MinimumAmountBookLeftAfterSelling}); 
+            
+            return result;
+        }
     }
 }
