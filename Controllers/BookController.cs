@@ -28,8 +28,8 @@ namespace BookStore.Controllers
         [HttpGet]
         public IActionResult GetAllBook([FromQuery] string typeId, [FromQuery] string searchString)
         {
-            _logger.LogInformation("A client is getting all books");
-            var result = _repository.GetAllBooks();
+            _logger.LogInformation("A client is getting books");
+            var result = _repository.GetAllBooks( typeId,searchString);
             _logger.LogCritical($"Found {result.Count} book(s)");
 
             if (result.Count == 0)

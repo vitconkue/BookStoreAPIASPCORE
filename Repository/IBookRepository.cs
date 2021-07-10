@@ -8,7 +8,7 @@ namespace BookStore.Repository
     public interface IBookRepository
     {
         List<BookType> GetAllType();
-        List<Book> GetAllBooks(); 
+        List<Book> GetAllBooks(string typeId, string searchString); 
         Book GetById(int id); 
 
 

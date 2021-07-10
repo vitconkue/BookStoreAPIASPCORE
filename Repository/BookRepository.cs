@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using BookStore.ActionModels;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using BookStore.Helper;
 
 namespace BookStore.Repository
 {
@@ -57,15 +58,47 @@ namespace BookStore.Repository
             return toAdd;
         }
 
-        public List<Book> GetAllBooks()
+        public List<Book> GetAllBooks(string typeId, string searchString)
         {
-            return _context.Books.OrderBy(book => book.Id).Include(book => book.Type).ToList();
+            List<Book> result = new List<Book>();
+            // apply type filter
+            if(typeId != null)
+            {
+                bool parseResult = int.TryParse(typeId, out int parseTypeId);
+                if(!parseResult)
+                    return null;
+                 result = 
+                    _context.Books.Include(book => book.Type)
+                                  .Where(book => book.Type.Id == parseTypeId)
+                                  .OrderBy(book => book.Id)
+                                  .ToList();
+            }
+            else{
+                result = _context.Books.Include(book => book.Type)
+                                    .OrderBy(book => book.Id)
+                                  .ToList();
+            }
+
+            // apply search filter
+            if(searchString != null && searchString != string.Empty)
+            {
+                result = result
+                .Where(book => book.Title.ToLower().Contains(searchString.ToLower()) || 
+                HelperFunctions.RemovedUTFAndToLower(book.Title).Contains(HelperFunctions.RemovedUTFAndToLower(searchString))).ToList(); 
+
+                // sort result
+                result = result
+                .OrderByDescending(searchResult
+                     => HelperFunctions.rateSearchResult(searchString,searchResult.Title))
+                .ToList();
+            }
+
+            return result; 
+
+             
         }
 
-        public List<Book> SearchBooks(string searchString)
-        {
-            return _context.Books.Where(book => book.Title.Contains(searchString)).ToList();
-        }
+   
 
         public Book GetById(int id)
         {
