@@ -11,3 +11,4 @@ packages
 /.vscode
 /ClassDiagram.cd
 /*.cd
+appsettings.json
