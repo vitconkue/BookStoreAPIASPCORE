@@ -22,6 +22,10 @@ namespace BookStore.Repository
         List<BillDetail> BulkAddBookToBill(int BillId, List<AddBookToBill> model);
 
         EntityEntry DeleteBillDetailEntry(int billDetailId);
+
+        // report part
+
+        List<BillDetail> GetBillDetailsWithSingleBookByMonth(int bookId, int month, int year);
     }
 
 }

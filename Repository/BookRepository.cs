@@ -98,7 +98,13 @@ namespace BookStore.Repository
              
         }
 
-   
+        public List<BookAmountChangingRecord> GetAllBookAmountChangingRecords()
+        {
+            return _context
+            .BookAmountChangingRecord
+            .Include(record => record.Book)
+            .OrderByDescending(record => record.DateChanged).ToList();
+        }
 
         public Book GetById(int id)
         {
@@ -160,5 +166,41 @@ namespace BookStore.Repository
             return found;
         }
 
+        public List<BookAmountChangingRecord> GetBookAmountChangingRecordsByMonthAndBookId(int bookId, int month, int year)
+        {
+           List<BookAmountChangingRecord> records = new List<BookAmountChangingRecord>(); 
+           records = _context
+            .BookAmountChangingRecord
+            .Include(record => record.Book)
+            .Where(record => record.Book.Id == bookId 
+            && record.DateChanged.Month == month && record.DateChanged.Year == year)
+            .OrderByDescending(record => record.DateChanged)
+            .ToList(); 
+
+            
+           return records;
+
+        }
+
+        public List<int> GetBooksIdWithChangedAmountInMonth(int month, int year)
+        {
+            var result = new List<int>(); 
+
+            result = _context.BookAmountChangingRecord
+                    .Include(record => record.Book)
+                    .Select(record => record.Book.Id)
+                    .ToList(); 
+
+            result.AddRange(
+                _context
+                .BillsDetails
+                .Include(detail => detail.Book)
+                .Include(detail => detail.Bill)
+                .Where(detail => detail.Bill.DateTime.Month == month && detail.Bill.DateTime.Year == year)
+                .Select(detail => detail.Book.Id)); 
+
+            result = result.Distinct().ToList();
+            return result;
+        }
     }
 }

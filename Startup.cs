@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using BookStore.Data;
 using Microsoft.EntityFrameworkCore;
 using BookStore.Repository;
+using BookStore.Services;
 
 namespace BookStore
 {
@@ -33,7 +34,8 @@ namespace BookStore
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IConfigurationRepository, ConfigurationsRepository>();
             services.AddTransient<ICustomerRepository,CustomerRepository>();
-            services.AddTransient<IReceiptRepository,ReceiptRepository>();    
+            services.AddTransient<IReceiptRepository,ReceiptRepository>();  
+            services.AddTransient<IReportService, ReportServices>();  
             services.AddScoped<IBillRepository,BillRepository>();
             services.AddCors();
             

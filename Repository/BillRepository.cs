@@ -247,5 +247,21 @@ namespace BookStore.Repository
 
             return newBillDetails;
         }
+
+        // report part
+        public List<BillDetail> GetBillDetailsWithSingleBookByMonth(int bookId, int month, int year)
+        {
+            List<BillDetail> billDetails = new List<BillDetail>();
+            billDetails = _context
+                .BillsDetails
+                .Include(detail => detail.Bill).ThenInclude(bill => bill.Customer)
+                .Include(detail => detail.Book)
+                .Where(detail => detail.Book.Id == bookId)
+                .Where(detail => detail.Bill.DateTime.Month == month && detail.Bill.DateTime.Year == year )
+                .OrderByDescending(detail => detail.Bill.DateTime)
+                .ToList(); 
+
+            return billDetails; 
+        }
     }
 }

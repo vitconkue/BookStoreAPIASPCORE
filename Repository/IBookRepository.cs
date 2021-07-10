@@ -8,7 +8,9 @@ namespace BookStore.Repository
     public interface IBookRepository
     {
         List<BookType> GetAllType();
-        List<Book> GetAllBooks(string typeId, string searchString); 
+        List<Book> GetAllBooks(string typeId, string searchString);
+
+        List<BookAmountChangingRecord> GetAllBookAmountChangingRecords();
         Book GetById(int id); 
 
 
@@ -18,5 +20,10 @@ namespace BookStore.Repository
         EntityEntry DeleteById(int id);
 
         Book UpdateBook(UpdateBookActionModel changed);
+
+        // for report part
+
+        List<int> GetBooksIdWithChangedAmountInMonth(int month, int year);
+        List<BookAmountChangingRecord> GetBookAmountChangingRecordsByMonthAndBookId(int bookId, int month,int year); 
     }
 }
