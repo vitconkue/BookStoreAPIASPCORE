@@ -30,7 +30,7 @@ namespace BookStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<AppDbContext>(p => p.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDbContext>(p => p.UseNpgsql(Configuration.GetConnectionString("HerokuConnection")));
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IConfigurationRepository, ConfigurationsRepository>();
             services.AddTransient<ICustomerRepository,CustomerRepository>();
