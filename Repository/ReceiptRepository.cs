@@ -77,11 +77,7 @@ namespace BookStore.Repository
             
             found.MoneyAmount = model.MoneyAmount; 
             
-            if(found.Customer.Id != model.CustomerID)
-            {
-                var newCustomer = await _context.Customers.FirstOrDefaultAsync(customer => customer.Id == model.CustomerID); 
-                found.Customer = newCustomer; 
-            }
+        
             await _context.SaveChangesAsync(); 
              _customerRepository.RefreshCustomerDebtField(found.Customer.Id);
 
