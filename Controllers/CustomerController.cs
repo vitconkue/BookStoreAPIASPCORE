@@ -62,5 +62,18 @@ namespace BookStore.Controllers
             }
             return Ok( new CustomerDTO(newCustomer));
         }
+
+        [HttpPost]
+        [Route("{update}")]
+        public IActionResult UpdateCustomer([FromBody] UpdateCustomerActionModel model)
+        {
+            Customer newCustomer = _repository.UpdateCustomer(model);
+
+            if(newCustomer == null)
+            {
+                return BadRequest(new {Error = "Failed update customer, contact An"}); 
+            }
+            return Ok( new CustomerDTO(newCustomer));
+        }
     }
 }

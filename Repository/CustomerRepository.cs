@@ -80,7 +80,19 @@ namespace BookStore.Repository
             return found;
         }
 
-      
+        public Customer UpdateCustomer(UpdateCustomerActionModel updateCustomerActionModel)
+        {
+            var found = _context.Customers.FirstOrDefault(customer => customer.Id == updateCustomerActionModel.CustomerID); 
+            if(found == null)
+                return null;
+            
+            found.Address = updateCustomerActionModel.Address;
+            found.Email =updateCustomerActionModel.Email;
+            found.Name = updateCustomerActionModel.Name;
+            found.PhoneNumber = updateCustomerActionModel.PhoneNumber;
+            _context.SaveChanges();
+            return found;
+        }
     }
 
 
