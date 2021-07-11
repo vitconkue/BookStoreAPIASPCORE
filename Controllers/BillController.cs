@@ -89,14 +89,14 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-        [Route("detail/update/{billDetailID}")]
-        public IActionResult UpdateBillDetailEntry(int billDetailID, [FromBody] UpdateBillEntryModel model)
+        [Route("detail/update/{billID}")]
+        public IActionResult UpdateBillDetailEntries(int billID, [FromBody] List<AddBookToBill> model)
         {
-            var result = _repository.UpdateSingleBillEntry(billDetailID,model); 
+            var result = _repository.BulkUpdateAllBillDetailEntry(billID,model); 
 
             if(result == null)
                 return BadRequest();
-            return Ok(new BillDetailDTO(result));
+            return Ok(result.Select(billDetail => new BillDetailDTO(billDetail)).ToList());
         }
 
         [HttpPost]

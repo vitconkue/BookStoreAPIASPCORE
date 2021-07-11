@@ -4,7 +4,7 @@ namespace BookStore.Models
 {
     public class DebtReport
     {
-        public Customer book {get;set;}
+        public Customer Customer {get;set;}
         public int Before {get;set;}
         
         public int ChangeAmount {get;set;}

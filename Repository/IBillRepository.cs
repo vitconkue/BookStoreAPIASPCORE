@@ -23,6 +23,10 @@ namespace BookStore.Repository
 
         EntityEntry DeleteBillDetailEntry(int billDetailId);
 
+        void BulkDeleteAllBillDetailEntry(int billId);
+
+        List<BillDetail> BulkUpdateAllBillDetailEntry(int billId, List<AddBookToBill> model);
+
         // report part
 
         List<BillDetail> GetBillDetailsWithSingleBookByMonth(int bookId, int month, int year);

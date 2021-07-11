@@ -98,12 +98,15 @@ namespace BookStore.Repository
         public EntityEntry DeleteBillDetailEntry(int billDetailId)
         {
             var foundBillDetailEntry  = _context.BillsDetails
+            .Include(billDetail => billDetail.Book)
             .Include(billDetail => billDetail.Bill)
-            .ThenInclude(bill => bill.Customer).FirstOrDefault(entry => entry.BillDetailId == billDetailId);
+          
+            .ThenInclude(bill => bill.Customer)
+            .FirstOrDefault(entry => entry.BillDetailId == billDetailId);
             if(foundBillDetailEntry == null)
                 return null;
             
-
+            foundBillDetailEntry.Book.CurrentAmount += foundBillDetailEntry.Amount;
             var result = _context.Remove(foundBillDetailEntry);
 
             _context.SaveChanges();
@@ -248,6 +251,33 @@ namespace BookStore.Repository
             return newBillDetails;
         }
 
+        public void BulkDeleteAllBillDetailEntry(int billId)
+        {
+             Bill found = _context.Bills
+            .Include(bill => bill.Details)
+            .ThenInclude(detail => detail.Book)
+            .Include(bill =>bill.Customer)
+            .FirstOrDefault(bill => bill.BillId == billId); 
+            if(found == null)
+                return ;
+            foreach(var detail in found.Details)
+            {
+                detail.Book.CurrentAmount += detail.Amount ;
+            }
+            _context.RemoveRange(found.Details);
+            _context.SaveChanges();
+
+            _customerRepository.RefreshCustomerDebtField(found.Customer.Id);
+        }
+
+        public List<BillDetail> BulkUpdateAllBillDetailEntry(int billId, List<AddBookToBill> model)
+        {
+            BulkDeleteAllBillDetailEntry(billId); 
+            var result = BulkAddBookToBill(billId,model);
+
+            return result;
+        }
+
         // report part
         public List<BillDetail> GetBillDetailsWithSingleBookByMonth(int bookId, int month, int year)
         {
@@ -263,5 +293,7 @@ namespace BookStore.Repository
 
             return billDetails; 
         }
+
+      
     }
 }
