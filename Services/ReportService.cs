@@ -88,7 +88,7 @@ namespace BookStore.Services
                 List<BookReport> toAdd = GetSingleBookMonthlyRecord(bookId,month,year); 
                 result.AddRange(toAdd);
             }
-            return result;
+            return result.OrderByDescending(record => record.Date).ToList();
         }
 
         public List<DebtReport> GetDebtRecords(int month, int year)
