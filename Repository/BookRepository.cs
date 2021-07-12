@@ -116,8 +116,9 @@ namespace BookStore.Repository
         {
             Book found = _context.Books.Include(book => book.Type).
                                         Include(book => book.InBillDetails)
-                                        .Include(book => book.InBookAmountChangingRecord).
-                        FirstOrDefault(book => book.Id == id);
+                                        .Include(book => book.InBookAmountChangingRecord)
+                                        .ThenInclude(record => record.Book)
+                        .FirstOrDefault(book => book.Id == id);
             if (found == null)
             {
                 return null;
