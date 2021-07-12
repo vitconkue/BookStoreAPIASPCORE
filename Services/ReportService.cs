@@ -79,6 +79,60 @@ namespace BookStore.Services
 
             return result;
         }
+
+        private List<DebtReport> GetSingleCustomerDebtRecordByMonth(int customerId, int month, int year)
+        {
+           var debtReports = new List<DebtReport>(); 
+           var allBills= _billRepository.GetBillsWithSingleCustomerByMonth(customerId,month,year);
+           var allReceipt = _receiptRepository.GetReceiptsWithCustomerByMonth(customerId,month,year); 
+
+
+           foreach(var bill in allBills)
+           {
+               var newRecord = new DebtReport {
+                   Customer = bill.Customer,
+                   Before = 0,
+                   ChangeAmount = bill.Total,
+                   After = 0, 
+                   Date = bill.DateTime
+               };
+
+               debtReports.Add(newRecord);
+           }
+
+           foreach(var receipt in allReceipt)
+           {
+               var newRecord = new DebtReport {
+                   Customer = receipt.Customer,
+                   Before = 0,
+                   ChangeAmount = - receipt.MoneyAmount,
+                   After = 0, 
+                   Date = receipt.DateTime
+               };
+
+               debtReports.Add(newRecord);
+           }
+
+           // sort all by datetime
+           
+           debtReports = debtReports.OrderByDescending(record => record.Date).ToList();
+
+           // fill before/after
+           int afterAmount = _customerRepository.GetSingleCustomer(customerId).CurrentDebt; 
+           foreach(var record in debtReports)
+           {
+               record.After = afterAmount;
+               record.Before = record.After - record.ChangeAmount;
+               afterAmount = record.Before;
+           }
+ 
+
+
+           return debtReports;
+
+            
+        }
+
         public List<BookReport> GetBooksReportRecords(int month, int year)
         {
             var result = new List<BookReport>();
@@ -91,16 +145,10 @@ namespace BookStore.Services
             return result.OrderByDescending(record => record.Date).ToList();
         }
 
-        public List<DebtReport> GetDebtRecords(int month, int year)
+        public List<DebtReport> GetDebtReportRecords(int month, int year)
         {
             List<DebtReport> debtReports = new List<DebtReport>();
-            // get all from bill details
 
-
-            // get all from receipt details
-
-
-            // sort by time
 
 
              

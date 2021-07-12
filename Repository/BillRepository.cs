@@ -274,7 +274,7 @@ namespace BookStore.Repository
         {
             BulkDeleteAllBillDetailEntry(billId); 
             var result = BulkAddBookToBill(billId,model);
-
+         
             return result;
         }
 
@@ -294,6 +294,18 @@ namespace BookStore.Repository
             return billDetails; 
         }
 
-      
+        public List<Bill> GetBillsWithSingleCustomerByMonth(int customerId, int month, int year)
+        {
+            List<Bill> bills = new List<Bill>(); 
+            bills = _context.Bills
+                        .Include(bill => bill.Details).ThenInclude(detail => detail.Book)
+                        .Include(bill => bill.Customer)
+                        .Where(bill => bill.DateTime.Month == month && bill.DateTime.Year == year )
+                        .Where(bill => bill.Customer.Id == customerId)
+                        .OrderByDescending(bill => bill.DateTime)
+                        .ToList(); 
+
+            return bills; 
+        }
     }
 }

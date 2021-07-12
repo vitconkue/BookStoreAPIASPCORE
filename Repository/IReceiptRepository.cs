@@ -18,6 +18,8 @@ namespace BookStore.Repository
          
          Task<EntityEntry> DeleteReceipt (int id);
 
+         // for report
+         List<Receipt> GetReceiptsWithCustomerByMonth(int customerId, int month, int year);
           
     }
 }

@@ -7,6 +7,6 @@ namespace BookStore.Services
     {
         List<BookReport> GetBooksReportRecords(int month, int year); 
 
-        List<DebtReport> GetDebtRecords(int month, int year);
+        List<DebtReport> GetDebtReportRecords(int month, int year);
     }
 }

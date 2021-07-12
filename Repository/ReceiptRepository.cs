@@ -103,6 +103,18 @@ namespace BookStore.Repository
 
             return result;
         }
+
+        public List<Receipt> GetReceiptsWithCustomerByMonth(int customerId, int month, int year)
+        {
+            var receipts = _context.Receipts
+                        .Include(receipt => receipt.Customer)
+                        .Where(receipt => receipt.Customer.Id == customerId)
+                        .Where(receipt => receipt.DateTime.Month == month && receipt.DateTime.Year == year)
+                        .OrderByDescending(receipt => receipt.DateTime)
+                        .ToList(); 
+
+            return receipts;
+        }
     }
 
 

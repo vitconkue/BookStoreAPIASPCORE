@@ -30,6 +30,8 @@ namespace BookStore.Repository
         // report part
 
         List<BillDetail> GetBillDetailsWithSingleBookByMonth(int bookId, int month, int year);
+
+        List<Bill> GetBillsWithSingleCustomerByMonth(int customerId, int month, int year);
     }
 
 }
