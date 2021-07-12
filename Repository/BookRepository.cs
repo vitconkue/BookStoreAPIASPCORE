@@ -188,19 +188,26 @@ namespace BookStore.Repository
         public List<int> GetBooksIdWithChangedAmountInMonth(int month, int year)
         {
             var result = new List<int>(); 
-
-            result = _context.BookAmountChangingRecord
+             List<int> ToAdd  = _context.BookAmountChangingRecord
                     .Include(record => record.Book)
                     .Select(record => record.Book.Id)
                     .ToList(); 
-
-            result.AddRange(
-                _context
+            if(ToAdd != null && ToAdd.Count > 0 )
+            {
+                result.AddRange(ToAdd);
+            }
+            ToAdd = _context
                 .BillsDetails
                 .Include(detail => detail.Book)
                 .Include(detail => detail.Bill)
                 .Where(detail => detail.Bill.DateTime.Month == month && detail.Bill.DateTime.Year == year)
-                .Select(detail => detail.Book.Id)); 
+                .Select(detail => detail.Book.Id).ToList();
+            
+
+            if(ToAdd != null && ToAdd.Count > 0 )
+            {
+                result.AddRange(ToAdd);
+            }
 
             result = result.Distinct().ToList();
             return result;

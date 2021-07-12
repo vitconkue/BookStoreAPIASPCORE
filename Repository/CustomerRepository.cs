@@ -22,7 +22,8 @@ namespace BookStore.Repository
             {
                 Name  = addCustomerModel.Name,
                 Address = addCustomerModel.Address,
-                PhoneNumber = addCustomerModel.PhoneNumber
+                PhoneNumber = addCustomerModel.PhoneNumber,
+                Email = addCustomerModel.Email
             };
             _context.Customers.Add(newCustomer);
             _context.SaveChanges();

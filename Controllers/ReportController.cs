@@ -28,7 +28,7 @@ namespace BookStore.Controllers
         public IActionResult GetBookAmountReport(int month, int year)
         {
             var records = _reportService.GetBooksReportRecords(month,year); 
-            return Ok(records); 
+            return Ok(records.Select(record => new DTO.BookReportDTO(record))); 
         }
 
         [HttpGet]
