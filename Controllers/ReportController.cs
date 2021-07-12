@@ -24,11 +24,20 @@ namespace BookStore.Controllers
         }
         
         [HttpGet]
-        [Route("{books-report}")]
+        [Route("books-report")]
         public IActionResult GetBookAmountReport(int month, int year)
         {
             var records = _reportService.GetBooksReportRecords(month,year); 
             return Ok(records); 
         }
+
+        [HttpGet]
+        [Route("debt-report")]
+        public IActionResult GetDebtChangeReport(int month, int year)
+        {
+            var records = _reportService.GetDebtReportRecords(month,year); 
+            return Ok(records.Select(record => new DTO.DebtReportDTO(record)).ToList()); 
+        }
+        
     }
 }

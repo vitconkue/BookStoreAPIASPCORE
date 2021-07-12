@@ -93,6 +93,28 @@ namespace BookStore.Repository
             _context.SaveChanges();
             return found;
         }
+
+        // for report
+        public List<int> GetCustomersIdWithChangedDebtInMonth(int month, int year)
+        {
+            List<int> idList = new List<int>();
+            var customerWithBill = _context.Bills  
+                                    .Include(bill => bill.Customer)
+                                    .Include(bill => bill.Details)
+                                    .Where(bill => bill.DateTime.Month == month && bill.DateTime.Year == year)
+                                    .Select(bill => bill.Customer.Id).ToList();
+                                    
+            idList.AddRange(customerWithBill); 
+
+            var customerWithReceipt = _context.Receipts
+                                        .Include(receipt => receipt.Customer)
+                                        .Where(receipt => receipt.DateTime.Month == month && receipt.DateTime.Year == year)
+                                        .Select(receipt => receipt.Customer.Id).ToList();                        
+            idList.AddRange(customerWithReceipt); 
+
+            idList = idList.Distinct().ToList();
+            return idList;
+        }
     }
 
 

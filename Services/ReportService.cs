@@ -149,10 +149,16 @@ namespace BookStore.Services
         {
             List<DebtReport> debtReports = new List<DebtReport>();
 
+            var customerIdList = _customerRepository.GetCustomersIdWithChangedDebtInMonth(month, year); 
 
+            foreach(var customerId in customerIdList)
+            {
+                List<DebtReport> toAdd = GetSingleCustomerDebtRecordByMonth(customerId, month,year);
+                debtReports.AddRange(toAdd);
+            }
 
              
-            return debtReports;
+            return debtReports.OrderByDescending(record => record.Date).ToList();
         }
     }
 }

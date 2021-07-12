@@ -17,5 +17,9 @@ namespace BookStore.Repository
         int? CalculateTotalDebt(int CustomerId);
 
         void RefreshCustomerDebtField(int customerId);
+
+        // for report
+        
+        List<int> GetCustomersIdWithChangedDebtInMonth(int month, int year);
     }
 }
