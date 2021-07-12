@@ -115,7 +115,8 @@ namespace BookStore.Repository
         public EntityEntry DeleteById(int id)
         {
             Book found = _context.Books.Include(book => book.Type).
-                                        Include(book => book.InBillDetails).
+                                        Include(book => book.InBillDetails)
+                                        .Include(book => book.InBookAmountChangingRecord).
                         FirstOrDefault(book => book.Id == id);
             if (found == null)
             {

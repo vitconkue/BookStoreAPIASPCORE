@@ -19,6 +19,9 @@ namespace BookStore.Models
 
        virtual public ICollection<BillDetail> InBillDetails {get;set;} = new List<BillDetail>();
 
+       virtual public ICollection<BookAmountChangingRecord> InBookAmountChangingRecord {get;set;} = new List<BookAmountChangingRecord>();
+
+
         
     }
 }
