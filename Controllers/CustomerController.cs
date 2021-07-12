@@ -64,7 +64,7 @@ namespace BookStore.Controllers
         }
 
         [HttpPost]
-        [Route("{update}")]
+        [Route("update")]
         public IActionResult UpdateCustomer([FromBody] UpdateCustomerActionModel model)
         {
             Customer newCustomer = _repository.UpdateCustomer(model);
