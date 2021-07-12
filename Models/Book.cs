@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookStore.Models
@@ -15,6 +16,9 @@ namespace BookStore.Models
        public BookType Type {get;set;}
 
        public int CurrentAmount {get;set;}
+
+       virtual public ICollection<BillDetail> InBillDetails {get;set;} = new List<BillDetail>();
+
         
     }
 }
