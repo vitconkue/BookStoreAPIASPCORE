@@ -6,8 +6,8 @@ using BookStore.Errors;
 using BookStore.ActionModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-
-
+using BookStore.DTO;
+using System.Linq;
 
 namespace BookStore.Controllers
 {
@@ -36,7 +36,7 @@ namespace BookStore.Controllers
             {
                 return NotFound(new NoBookFoundError());
             }
-            else return Ok(result);
+            else return Ok(result.Select(book => new BookDTO(book)));
         }
         [HttpGet]
         [Route("types")]
@@ -54,7 +54,7 @@ namespace BookStore.Controllers
             {
                 return NotFound(new NoBookFoundError());
             }
-            return Ok(result);
+            return Ok(new BookDTO(result));
         }
 
         [HttpPost]
@@ -66,7 +66,7 @@ namespace BookStore.Controllers
             }
             Book result = _repository.AddBook(model);
 
-            return Ok(result);
+            return Ok(new BookDTO(result));
         }
 
         [HttpPost]
@@ -92,7 +92,7 @@ namespace BookStore.Controllers
             {
                 return BadRequest();
             }
-            return Ok(result);
+            return Ok(new BookDTO(result));
         }
     }
 }
