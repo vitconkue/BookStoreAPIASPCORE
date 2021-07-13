@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using BookStore.Models;
 
 namespace BookStore.DTO
@@ -17,7 +18,7 @@ namespace BookStore.DTO
             Id = source.BillId;
             Customer = new CustomerDTO
             (source.Customer) ;
-            DateTime = source.DateTime.Date.ToString();
+            DateTime = source.DateTime.Date.ToString(CultureInfo.InvariantCulture);
             Total = source.Total;
         }   
 

@@ -67,11 +67,11 @@ namespace BookStore.Repository
                 bool parseResult = int.TryParse(typeId, out int parseTypeId);
                 if(!parseResult)
                     return null;
-                 result = 
+                result = 
                     _context.Books.Include(book => book.Type)
-                                  .Where(book => book.Type.Id == parseTypeId)
-                                  .OrderBy(book => book.Id)
-                                  .ToList();
+                        .Where(book => book.Type.Id == parseTypeId)
+                        .OrderBy(book => book.Id)
+                        .ToList();
             }
             else{
                 result = _context.Books.Include(book => book.Type)
@@ -80,7 +80,7 @@ namespace BookStore.Repository
             }
 
             // apply search filter
-            if(searchString != null && searchString != string.Empty)
+            if(!string.IsNullOrEmpty(searchString))
             {
                 result = result
                 .Where(book => book.Title.ToLower().Contains(searchString.ToLower()) || 
@@ -175,18 +175,16 @@ namespace BookStore.Repository
 
         public List<BookAmountChangingRecord> GetBookAmountChangingRecordsByMonthAndBookId(int bookId, int month, int year)
         {
-           List<BookAmountChangingRecord> records = new List<BookAmountChangingRecord>(); 
-           records = _context
-            .BookAmountChangingRecord
-            .Include(record => record.Book)
-            .Where(record => record.Book.Id == bookId 
-            && record.DateChanged.Month == month && record.DateChanged.Year == year)
-            .OrderByDescending(record => record.DateChanged)
-            .ToList(); 
+            var records = _context
+                .BookAmountChangingRecord
+                .Include(record => record.Book)
+                .Where(record => record.Book.Id == bookId 
+                                 && record.DateChanged.Month == month && record.DateChanged.Year == year)
+                .OrderByDescending(record => record.DateChanged)
+                .ToList();
 
-            
-           return records;
 
+            return records;
         }
 
         public List<int> GetBooksIdWithChangedAmountInMonth(int month, int year)

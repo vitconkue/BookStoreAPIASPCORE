@@ -18,7 +18,7 @@ namespace BookStore.Repository
         }
         public Customer AddCustomer(AddCustomerModel addCustomerModel)
         {
-            Customer newCustomer = new Customer 
+            var newCustomer = new Customer 
             {
                 Name  = addCustomerModel.Name,
                 Address = addCustomerModel.Address,
@@ -53,7 +53,7 @@ namespace BookStore.Repository
 
         public void RefreshCustomerDebtField(int customerId)
         {
-            Customer found = _context.Customers.FirstOrDefault(customer => customer.Id == customerId); 
+            var found = _context.Customers.FirstOrDefault(customer => customer.Id == customerId); 
             if(found == null)
                 return;
             int? newDebt = CalculateTotalDebt(customerId); 
