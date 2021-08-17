@@ -4,15 +4,15 @@ namespace BookStore.Helper
 {
     class HelperFunctions
     {
-        public static string RemovedUTFAndToLower(string input)
+        public static string RemovedUtfAndToLower(string input)
         {
 
-            int checkContainsInReplaceString(char input_char)
+            int CheckContainsInReplaceString(char inputChar)
             {
                 string toReplace = "ăâđêôơưàảãạáằẳẵặắầẩẫậấèẻẽẹéềểễệếìỉĩịíòỏõọóồổỗộốờởỡợớùủũụúừửữựứỳỷỹỵýđð";
                 for (int i = 0; i < toReplace.Length; ++i)
                 {
-                    if (toReplace[i] == input_char)
+                    if (toReplace[i] == inputChar)
                     {
                         return i;
                     }
@@ -25,7 +25,7 @@ namespace BookStore.Helper
 
             for (int i = 0; i < result.Length; ++i)
             {
-                int checkValue = checkContainsInReplaceString(result[i]);
+                int checkValue = CheckContainsInReplaceString(result[i]);
                 if (checkValue != -1)
                 {
                     result = result.Replace(result[i], toMatch[checkValue]);
@@ -35,12 +35,12 @@ namespace BookStore.Helper
             return result.ToLower();
         }
 
-        public static int rateSearchResult(string searchText, string matchedText)
+        public static int RateSearchResult(string searchText, string matchedText)
         {
             // longer match => higher rate
             int result = searchText.Length * 10;
-            string removedUTFSearchText = HelperFunctions.RemovedUTFAndToLower(searchText);
-            string removedUTFMatchedText = HelperFunctions.RemovedUTFAndToLower(matchedText);
+            string removedUtfSearchText = HelperFunctions.RemovedUtfAndToLower(searchText);
+            string removedUtfMatchedText = HelperFunctions.RemovedUtfAndToLower(matchedText);
 
 
 
@@ -48,14 +48,14 @@ namespace BookStore.Helper
             int indexOfMatch = matchedText.IndexOf(searchText);
             if (indexOfMatch <= 0)
             {
-                indexOfMatch = removedUTFMatchedText
-                .IndexOf(removedUTFMatchedText);
+                indexOfMatch = removedUtfMatchedText
+                .IndexOf(removedUtfMatchedText);
             }
     
             // match at the beginning => higher rate
             result -= indexOfMatch * 2;
 
-            // match with better Vietnamse symbol => higher rate
+            // match with better Vietnamese symbol => higher rate
 
             for (int i = 0; i < searchText.Length; ++i)
             {
@@ -66,12 +66,12 @@ namespace BookStore.Helper
             }
             return result;
         }
-        public static bool isNumericString(string input_string)
+        public static bool IsNumericString(string inputString)
         {
             bool result = true;
-            for (int i = 0; i < input_string.Length; i++)
+            foreach (var character in inputString)
             {
-                if (input_string[i] < '0' || input_string[i] > '9')
+                if (character < '0' || character > '9')
                 {
                     result = false;
                 }

@@ -300,6 +300,7 @@ namespace BookStore.Repository
             bills = _context.Bills
                         .Include(bill => bill.Details).ThenInclude(detail => detail.Book)
                         .Include(bill => bill.Customer)
+                        .Where(bill => bill.Details.Count > 0 )
                         .Where(bill => bill.DateTime.Month == month && bill.DateTime.Year == year )
                         .Where(bill => bill.Customer.Id == customerId)
                         .OrderByDescending(bill => bill.DateTime)

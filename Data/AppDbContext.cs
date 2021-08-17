@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using BookStore.Models; 
+using BookStore.Models;
+using System.Linq;
 
 namespace BookStore.Data
 {
@@ -24,7 +25,17 @@ namespace BookStore.Data
         public DbSet<BillDetail> BillsDetails {get;set;}
 
         public DbSet<Receipt> Receipts {get;set;}   
+        
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
+            }
+        }
+
+       
 
     }
 }

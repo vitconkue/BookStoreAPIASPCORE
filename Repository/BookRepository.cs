@@ -84,12 +84,12 @@ namespace BookStore.Repository
             {
                 result = result
                 .Where(book => book.Title.ToLower().Contains(searchString.ToLower()) || 
-                HelperFunctions.RemovedUTFAndToLower(book.Title).Contains(HelperFunctions.RemovedUTFAndToLower(searchString))).ToList(); 
+                HelperFunctions.RemovedUtfAndToLower(book.Title).Contains(HelperFunctions.RemovedUtfAndToLower(searchString))).ToList(); 
 
                 // sort result
                 result = result
                 .OrderByDescending(searchResult
-                     => HelperFunctions.rateSearchResult(searchString,searchResult.Title))
+                     => HelperFunctions.RateSearchResult(searchString,searchResult.Title))
                 .ToList();
             }
 
@@ -117,8 +117,8 @@ namespace BookStore.Repository
             // delete in bookamount changing record
 
             
-            Book found = _context.Books.Include(book => book.Type).
-                                        Include(book => book.InBillDetails)
+            Book found = _context.Books.Include(book => book.Type)
+                                        .Include(book => book.InBillDetails)
                                         .Include(book => book.InBookAmountChangingRecord)
                                     
                         .FirstOrDefault(book => book.Id == id);
@@ -126,7 +126,7 @@ namespace BookStore.Repository
             {
                 return null;
             }
-            var result = _context.Books.Remove(found);
+            var result = _context.Remove(found);
             _context.SaveChanges();
             return result;
         }
@@ -192,15 +192,15 @@ namespace BookStore.Repository
         public List<int> GetBooksIdWithChangedAmountInMonth(int month, int year)
         {
             var result = new List<int>(); 
-             List<int> ToAdd  = _context.BookAmountChangingRecord
+             List<int> toAdd  = _context.BookAmountChangingRecord
                     .Include(record => record.Book)
                     .Select(record => record.Book.Id)
                     .ToList(); 
-            if(ToAdd != null && ToAdd.Count > 0 )
+            if(toAdd != null && toAdd.Count > 0 )
             {
-                result.AddRange(ToAdd);
+                result.AddRange(toAdd);
             }
-            ToAdd = _context
+            toAdd = _context
                 .BillsDetails
                 .Include(detail => detail.Book)
                 .Include(detail => detail.Bill)
@@ -208,9 +208,9 @@ namespace BookStore.Repository
                 .Select(detail => detail.Book.Id).ToList();
             
 
-            if(ToAdd != null && ToAdd.Count > 0 )
+            if(toAdd != null && toAdd.Count > 0 )
             {
-                result.AddRange(ToAdd);
+                result.AddRange(toAdd);
             }
 
             result = result.Distinct().ToList();
